@@ -3,7 +3,6 @@ from Card import Card
 from Player import Player
 
 class GameState:
-    def __init__(self, player_positions: List[int], discard_pile: Set[Card], curr_player: Player) -> None:
-        self.player_positions = player_positions
-        self.discard_pile = discard_pile
-        self.curr_player = curr_player
+    def __init__(self, players: List[Player], discard_pile: Set[Card]) -> None:
+        self.players: List[Player] = players
+        self.discard_pile: Set[Card] = discard_pile

@@ -1,27 +1,12 @@
-from enum import Enum
-
-class Color(Enum):
-    RED = 1
-    PURPLE = 2
-    YELLOW = 3
-    BLUE = 4
-    ORANGE = 5
-    GREEN = 6
-    PINK = 7
-
-class Treat(Enum):
-    CHOCOLATE = 1
-    ICE_CREAM = 2
-    LOLLI_POP = 3
-    GUM_DROP = 4
-    PEPPERMINT = 5
+from BoardSpace import (Color, Treat)
 
 class Card:
-    def __init__(self, is_single_block: bool, color: Color) -> None:
-        self.is_single_block = is_single_block
-        self.color = color
+    def __init__(self, color: Color, is_single_block: bool = True) -> None:
+        self.is_single_block: bool = is_single_block
+        self.color: Color = color
 
 class TreatCard(Card):
-    def __init__(self, is_single_block: bool, color: Color) -> None:
-        super().__init__(is_single_block, color)
-        self.treat = Treat
+    def __init__(self, treat: Treat, is_single_block: bool = True) -> None:
+        super().__init__(is_single_block)
+        self.color: Color = Color.PINK
+        self.treat: Treat = treat;
