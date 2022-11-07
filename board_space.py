@@ -1,4 +1,5 @@
 from enum import Enum
+from typing import Union
 
 class Shortcut(Enum):
     RAINBOW_TRAIL = 1
@@ -28,13 +29,21 @@ class BoardSpace:
         self.color: Color = color
         self.position: int = position
         self.sticky: bool = sticky
+        self.shortcut: Union[None, Shortcut] = None
+        self.treat: Union[None, Treat] = None
 
 class ShortcutSpace(BoardSpace):
     def __init__(self, color: Color, position: int, shortcut: Shortcut) -> None:
-        super().__init__(color, position)
-        self.shortcut: Shortcut = shortcut
+        self.color = color
+        self.position = position
+        self.sticky = False
+        self.shortcut = shortcut
+        self.treat = None
 
 class TreatSpace(BoardSpace):
-    def __init__(self, treat: Treat, position: int, color: Color = Color.PINK, sticky: bool = False) -> None:
-        super().__init__(color, position, sticky)
+    def __init__(self, treat: Treat, position: int) -> None:
+        self.color = Color.PINK
+        self.position = position
+        self.sticky = False
+        self.shortcut = None
         self.treat: Treat = treat

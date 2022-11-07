@@ -1,9 +1,9 @@
 from typing import List
-from BoardSpace import (BoardSpace, ShortcutSpace, Shortcut, TreatSpace, Color, Treat)
+from board_space import BoardSpace, ShortcutSpace, Shortcut, TreatSpace, Color, Treat
 
 class Board:
     def __init__(self) -> None:
-        self.board: List[BoardSpace] = self.generate_board()
+        self.board_spaces: List[BoardSpace] = self.generate_board()
 
     def generate_board(self) -> List[BoardSpace]:
         board: List[BoardSpace] = [BoardSpace(Color.START, 0)]
@@ -143,5 +143,4 @@ class Board:
         board.append(BoardSpace(Color.RED, 134))
         board.append(BoardSpace(Color.PURPLE, 135))
         board.append(BoardSpace(Color.END, 136))
-        print(board)
         return board

@@ -1,4 +1,4 @@
-from BoardSpace import BoardSpace
+from board_space import BoardSpace
 
 class Player:
     def __init__(self, player_number: int, board_space: BoardSpace) -> None:
