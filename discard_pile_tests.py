@@ -12,3 +12,5 @@ def test_add_card() -> None:
     discard_pile.add_card(card_1)
     discard_pile.add_card(card_2)
     discard_pile.add_card(card_3)
+
+    assert len(discard_pile.cards) == 3, "Discard pile has wrong number of cards"
