@@ -1,5 +1,5 @@
 from card import Card, TreatCard
-from board_space import Color, Treat
+from board import Color, Treat
 from discard_pile import DiscardPile
 
 def test_add_card() -> None:

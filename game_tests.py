@@ -1,6 +1,6 @@
 from game import Game
 from player import Player
-from board_space import BoardSpace, Color, TreatSpace, Treat, Shortcut, ShortcutSpace
+from board import BoardSpace, Color, TreatSpace, Treat
 from game_state import GameState, GameStatePlayers
 from discard_pile import DiscardPile
 from card import Card, TreatCard
@@ -16,7 +16,7 @@ def test_new_game() -> None:
     discard_pile: DiscardPile = game_state.discard_pile
 
     correct_players: GameStatePlayers = GameStatePlayers(
-        Player(1, BoardSpace(Color.START, 0)),
+        Player(1, BoardSpace(Color.START, 0), is_current_player=True),
         Player(2, BoardSpace(Color.START, 0)),
         Player(3, BoardSpace(Color.START, 0)),
         Player(4, BoardSpace(Color.START, 0)),
@@ -32,7 +32,7 @@ def test_new_game() -> None:
         GameStatePlayers(
             Player(1, BoardSpace(Color.BLUE, 30)),
             Player(2, BoardSpace(Color.START, 0)),
-            Player(3, TreatSpace(Treat.CANDY_CANE)),
+            Player(3, TreatSpace(Treat.CANDY_CANE), is_current_player=True),
             Player(4, BoardSpace(Color.PURPLE, 15)),
         ),
         DiscardPile({
@@ -50,7 +50,7 @@ def test_new_game() -> None:
     correct_players = GameStatePlayers(
         Player(1, BoardSpace(Color.BLUE, 30)),
         Player(2, BoardSpace(Color.START, 0)),
-        Player(3, TreatSpace(Treat.CANDY_CANE)),
+        Player(3, TreatSpace(Treat.CANDY_CANE), is_current_player=True),
         Player(4, BoardSpace(Color.PURPLE, 15)),
     )
     correct_discard_pile = DiscardPile({
@@ -64,7 +64,7 @@ def test_new_game() -> None:
 
 def has_correct_players(players: GameStatePlayers, correct_players: GameStatePlayers) -> bool:
     for i in range(0, 4):
-        if players[i].player_number != correct_players[i].player_number or players[i].board_space.color != correct_players[i].board_space.color or correct_players[i].board_space.position != players[i].board_space.position:
+        if players[i].player_number != correct_players[i].player_number or players[i].board_space.color != correct_players[i].board_space.color or correct_players[i].board_space.position != players[i].board_space.position or correct_players[i].is_current_player != players[i].is_current_player:
             return False
     return True
 
@@ -79,3 +79,32 @@ def has_correct_discard_pile(discard_pile: DiscardPile, correct_discard_pile: Di
                 bucket.add(correct_card)
 
     return len(bucket) == len(discard_pile.cards)    
+
+def test_game_over_check() -> None:
+    # it should know the game is not over when none of the players 
+    # have made it to the end yet
+
+    game: Game = Game()
+    game_over = game.check_if_game_over()
+
+    assert game_over == False, "The game is not over"
+
+    # apply drawn cards until someone wins a game
+    # game.change_game_state()
+
+def test_move_curr_player_to_treat() -> None:
+    # only the current player should be moved
+
+    # the current player should be moved to the correct treat space
+
+    # they should not be moved to some other treat space
+    pass
+
+# def test_apply_drawn_card() -> None:
+
+def test_current_player() -> None:
+    # finds the current player
+    game: Game = Game()
+    current_player = game.game_state.players[0]
+
+    assert game.current_player() == current_player

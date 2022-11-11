@@ -1,7 +1,7 @@
 from typing import Set
 from card import Card, TreatCard
 from discard_pile import DiscardPile
-from board_space import Color, Treat
+from board import Color, Treat
 
 class Deck:
     def __init__(self, discard_pile: DiscardPile) -> None:

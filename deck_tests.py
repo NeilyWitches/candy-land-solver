@@ -1,4 +1,4 @@
-from board_space import Treat, Color
+from board import Treat, Color
 from deck import Deck
 from typing import Dict, Union, Set
 from card import Card, TreatCard
