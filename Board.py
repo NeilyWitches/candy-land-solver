@@ -43,6 +43,13 @@ class BoardSpace:
             )
         if position < 0 or position > BoardSpaces.length():
             raise ValueError("position must be in between 0 and 136 inclusive")
+        if sticky:
+            is_sticky_1: bool = position == 48 and color == Color.YELLOW
+            is_sticky_2: bool = position == 86 and color == Color.BLUE
+            is_sticky_3: bool = position == 122 and color == Color.RED
+
+            if not is_sticky_1 and not is_sticky_2 and not is_sticky_3:
+                raise ValueError("Invalid sticky space")
 
         self.color: Color = color
         self.position: int = position

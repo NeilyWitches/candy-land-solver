@@ -45,7 +45,9 @@ class Game:
         return False
 
     def apply_drawn_card(self, card: Card) -> None:
-        # if they are not on a stuck space or if they are but they just became unstuck
+        # do not apply the card at all if they are stuck
+        if self.current_player().is_stuck(card):
+            return
 
         if card.treat:
             # move the current player to that treat space
@@ -80,7 +82,7 @@ class Game:
             raise ValueError("Treat space not found")
 
         # change the current player's board space to that one
-        # self.current_player().board_space = 
+        self.current_player().move_player(treat_space)
 
     def current_player(self) -> Player:
         for player in self.players:
