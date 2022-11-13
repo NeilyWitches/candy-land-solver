@@ -4,7 +4,7 @@ from card import Card
 
 def test_is_stuck() -> None:
     # if the player is on a sticky space and the card drawn does not unstick the player, they should be stuck
-    player: Player = Player(1, BoardSpace(Color.YELLOW, 48, sticky=True), is_current_player=True)
+    player: Player = Player(1, BoardSpace(Color.YELLOW, 7, sticky=True), is_current_player=True)
     card: Card = Card(Color.BLUE)
     
     assert player.is_stuck(card) == True
@@ -18,7 +18,7 @@ def test_is_stuck() -> None:
     assert player.is_stuck(card) == False
 
     # if the player is not on a sticky space they should be unstuck
-    player.board_space = BoardSpace(Color.BLUE, 49)
+    player.board_space = BoardSpace(Color.BLUE, 4)
     assert player.is_stuck(card) == False
 
 def test_move_player() -> None:

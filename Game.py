@@ -1,17 +1,17 @@
 from typing import Union
 from game_state import GameState, GameStatePlayers
 from player import Player
-from board import Board, BoardSpaces, BoardSpace, Color
+from board import Board, BoardSpace, BoardSpaces, Color
 from discard_pile import DiscardPile
 from deck import Deck
-from card import Card, TreatCard
+from card import Card
 
 class Game:
     def __init__(self, game_state: Union[GameState, None] = None) -> None:
         self.board: Board = Board()
         self.game_state: GameState
         if game_state is None:
-            starting_space: BoardSpace = self.board.board_spaces[0]
+            starting_space: BoardSpace = self.board.board_spaces.StartSpace
             self.game_state = GameState(GameStatePlayers(
                 Player(1, starting_space, is_current_player=True),
                 Player(2, starting_space),
@@ -21,8 +21,8 @@ class Game:
         else:
             self.game_state = game_state
 
-        self.players = self.game_state.players
-        self.discard_pile = self.game_state.discard_pile    
+        self.players: GameStatePlayers = self.game_state.players
+        self.discard_pile: DiscardPile = self.game_state.discard_pile    
 
         self.deck: Deck = Deck(self.game_state.discard_pile)
 
@@ -55,6 +55,7 @@ class Game:
         else:
             if card.is_single_block:
                 # move current player to the next board space of the card's color
+                # self.move_curr_player_to_next(card.color)
                 pass
             else:
                 pass
@@ -84,9 +85,12 @@ class Game:
         # change the current player's board space to that one
         self.current_player().move_player(treat_space)
 
+
     def current_player(self) -> Player:
         for player in self.players:
             if player.is_current_player:
                 return player
 
         raise ValueError("Current player not found")
+
+    # def move_curr_player_to_next(color: Color) -> None:

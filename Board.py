@@ -32,21 +32,21 @@ class BoardSpace:
         if color is Color.START and position != 0:
             raise ValueError(
                 "Cannot create a starting board space with a position other than 0")
-        if color is Color.END and position != BoardSpaces.length() - 1:
+        if color is Color.END and position != 0:
             raise ValueError(
-                f"Cannot create an ending board space with a position other than {BoardSpaces.length() - 1}")
+                f"Cannot create an ending board space with a position other than 0")
         if color is Color.PINK:
             raise ValueError(
                 """PINK is reserved for TreatSpaces, if you are trying to make a treat space object, 
                 do not pass a color into BoardSpace(), pass in a treat instead into TreatSpace, e.g: 
                 TreatSpace(Treat.CANDY_CANE, 15)"""
             )
-        if position < 0 or position > BoardSpaces.length():
+        if position < 0 or position > 21:
             raise ValueError("position must be in between 0 and 136 inclusive")
         if sticky:
-            is_sticky_1: bool = position == 48 and color == Color.YELLOW
-            is_sticky_2: bool = position == 86 and color == Color.BLUE
-            is_sticky_3: bool = position == 122 and color == Color.RED
+            is_sticky_1: bool = position == 7 and color == Color.YELLOW
+            is_sticky_2: bool = position == 13 and color == Color.BLUE
+            is_sticky_3: bool = position == 19 and color == Color.RED
 
             if not is_sticky_1 and not is_sticky_2 and not is_sticky_3:
                 raise ValueError("Invalid sticky space")
@@ -64,10 +64,10 @@ class ShortcutSpace(BoardSpace):
         self.position: int
         if shortcut is Shortcut.RAINBOW_TRAIL:
             self.color = Color.ORANGE
-            self.position = 5
+            self.position = 0
         elif shortcut is Shortcut.GUMDROP_PASS:
             self.color = Color.PURPLE
-            self.position = 34
+            self.position = 5
         else:
             raise ValueError("Invalid shortcut")
         self.sticky = False
@@ -78,17 +78,17 @@ class TreatSpace(BoardSpace):
     def __init__(self, treat: Treat) -> None:
         self.treat = treat
         if treat is Treat.PLUMB:
-            self.position = 9
+            self.position = 0
         elif treat is Treat.CANDY_CANE:
-            self.position = 18
+            self.position = 1
         elif treat is Treat.GUMDROP:
-            self.position = 43
+            self.position = 2
         elif treat is Treat.NUT:
-            self.position = 75
+            self.position = 3
         elif treat is Treat.LOLLIPOP:
-            self.position = 96
+            self.position = 4
         elif treat is Treat.FROST:
-            self.position = 104
+            self.position = 5
         else:
             raise ValueError("Invalid treat")
         self.color = Color.PINK
@@ -97,290 +97,282 @@ class TreatSpace(BoardSpace):
 
 class BoardSpaces(NamedTuple):
     StartSpace: BoardSpace
-    BoardSpace_1: BoardSpace
-    BoardSpace_2: BoardSpace
-    BoardSpace_3: BoardSpace
-    BoardSpace_4: BoardSpace
+    RedSpace_0: BoardSpace
+    PurpleSpace_0: BoardSpace
+    YellowSpace_0: BoardSpace
+    BlueSpace_0: BoardSpace
     RainbowTrail: ShortcutSpace
-    BoardSpace_6: BoardSpace
-    BoardSpace_7: BoardSpace
-    BoardSpace_8: BoardSpace
-    Plum: TreatSpace
-    BoardSpace_10: BoardSpace
-    BoardSpace_11: BoardSpace
-    BoardSpace_12: BoardSpace
-    BoardSpace_13: BoardSpace
-    BoardSpace_14: BoardSpace
-    BoardSpace_15: BoardSpace
-    BoardSpace_16: BoardSpace
-    BoardSpace_17: BoardSpace
+    GreenSpace_0: BoardSpace
+    RedSpace_1: BoardSpace
+    PurpleSpace_1: BoardSpace
+    Plumb: TreatSpace
+    YellowSpace_1: BoardSpace
+    BlueSpace_1: BoardSpace
+    OrangeSpace_1: BoardSpace
+    GreenSpace_1: BoardSpace
+    RedSpace_2: BoardSpace
+    PurpleSpace_2: BoardSpace
+    YellowSpace_2: BoardSpace
+    BlueSpace_2: BoardSpace
     CandyCane: TreatSpace
-    BoardSpace_19: BoardSpace
-    BoardSpace_20: BoardSpace
-    BoardSpace_21: BoardSpace
-    BoardSpace_22: BoardSpace
-    BoardSpace_23: BoardSpace
-    BoardSpace_24: BoardSpace
-    BoardSpace_25: BoardSpace
-    BoardSpace_26: BoardSpace
-    BoardSpace_27: BoardSpace
-    BoardSpace_28: BoardSpace
-    BoardSpace_29: BoardSpace
-    BoardSpace_30: BoardSpace
-    BoardSpace_31: BoardSpace
-    BoardSpace_32: BoardSpace
-    BoardSpace_33: BoardSpace
+    OrangeSpace_2: BoardSpace
+    GreenSpace_2: BoardSpace
+    RedSpace_3: BoardSpace
+    PurpleSpace_3: BoardSpace
+    YellowSpace_3: BoardSpace
+    BlueSpace_3: BoardSpace
+    OrangeSpace_3: BoardSpace
+    GreenSpace_3: BoardSpace
+    RedSpace_4: BoardSpace
+    PurpleSpace_4: BoardSpace
+    YellowSpace_4: BoardSpace
+    BlueSpace_4: BoardSpace
+    OrangeSpace_4: BoardSpace
+    GreenSpace_4: BoardSpace
+    RedSpace_5: BoardSpace
     GumdropPass: ShortcutSpace
-    BoardSpace_35: BoardSpace
-    BoardSpace_36: BoardSpace
-    BoardSpace_37: BoardSpace
-    BoardSpace_38: BoardSpace
-    BoardSpace_39: BoardSpace
-    BoardSpace_40: BoardSpace
-    BoardSpace_41: BoardSpace
-    BoardSpace_42: BoardSpace
-    GumDrop: TreatSpace
-    BoardSpace_44: BoardSpace
-    BoardSpace_45: BoardSpace
-    BoardSpace_46: BoardSpace
-    BoardSpace_47: BoardSpace
-    StickySpace_1: BoardSpace
-    BoardSpace_49: BoardSpace
-    BoardSpace_50: BoardSpace
-    BoardSpace_51: BoardSpace
-    BoardSpace_52: BoardSpace
-    BoardSpace_53: BoardSpace
-    BoardSpace_54: BoardSpace
-    BoardSpace_55: BoardSpace
-    BoardSpace_56: BoardSpace
-    BoardSpace_57: BoardSpace
-    BoardSpace_58: BoardSpace
-    BoardSpace_59: BoardSpace
-    BoardSpace_60: BoardSpace
-    BoardSpace_61: BoardSpace
-    BoardSpace_62: BoardSpace
-    BoardSpace_63: BoardSpace
-    BoardSpace_64: BoardSpace
-    BoardSpace_65: BoardSpace
-    BoardSpace_66: BoardSpace
-    BoardSpace_67: BoardSpace
-    BoardSpace_68: BoardSpace
-    BoardSpace_69: BoardSpace
-    BoardSpace_70: BoardSpace
-    BoardSpace_71: BoardSpace
-    BoardSpace_72: BoardSpace
-    BoardSpace_73: BoardSpace
-    BoardSpace_74: BoardSpace
+    YellowSpace_5: BoardSpace
+    BlueSpace_5: BoardSpace
+    OrangeSpace_5: BoardSpace
+    GreenSpace_5: BoardSpace
+    RedSpace_6: BoardSpace
+    PurpleSpace_6: BoardSpace
+    YellowSpace_6: BoardSpace
+    BlueSpace_6: BoardSpace
+    Gumdrop: TreatSpace
+    OrangeSpace_6: BoardSpace
+    GreenSpace_6: BoardSpace
+    RedSpace_7: BoardSpace
+    PurpleSpace_7: BoardSpace
+    StickySpace_0: BoardSpace
+    BlueSpace_7: BoardSpace
+    OrangeSpace_7: BoardSpace
+    GreenSpace_7: BoardSpace
+    RedSpace_8: BoardSpace
+    PurpleSpace_8: BoardSpace
+    YellowSpace_8: BoardSpace
+    BlueSpace_8: BoardSpace
+    OrangeSpace_8: BoardSpace
+    GreenSpace_8: BoardSpace
+    RedSpace_9: BoardSpace
+    PurpleSpace_9: BoardSpace
+    YellowSpace_9: BoardSpace
+    BlueSpace_9: BoardSpace
+    OrangeSpace_9: BoardSpace
+    GreenSpace_9: BoardSpace
+    RedSpace_10: BoardSpace
+    PurpleSpace_10: BoardSpace
+    YellowSpace_10: BoardSpace
+    BlueSpace_10: BoardSpace
+    OrangeSpace_10: BoardSpace
+    GreenSpace_10: BoardSpace
+    RedSpace_11: BoardSpace
+    PurpleSpace_11: BoardSpace
+    YellowSpace_11: BoardSpace
+    BlueSpace_11: BoardSpace
+    OrangeSpace_11: BoardSpace
     Nut: TreatSpace
-    BoardSpace_76: BoardSpace
-    BoardSpace_77: BoardSpace
-    BoardSpace_78: BoardSpace
-    BoardSpace_79: BoardSpace
-    BoardSpace_80: BoardSpace
-    BoardSpace_81: BoardSpace
-    BoardSpace_82: BoardSpace
-    BoardSpace_83: BoardSpace
-    BoardSpace_84: BoardSpace
-    BoardSpace_85: BoardSpace
-    StickySpace_2: BoardSpace
-    BoardSpace_87: BoardSpace
-    BoardSpace_88: BoardSpace
-    BoardSpace_89: BoardSpace
-    BoardSpace_90: BoardSpace
-    BoardSpace_91: BoardSpace
-    BoardSpace_92: BoardSpace
-    BoardSpace_93: BoardSpace
-    BoardSpace_94: BoardSpace
-    BoardSpace_95: BoardSpace
-    LolliPop: TreatSpace
-    BoardSpace_97: BoardSpace
-    BoardSpace_98: BoardSpace
-    BoardSpace_99: BoardSpace
-    BoardSpace_100: BoardSpace
-    BoardSpace_101: BoardSpace
-    BoardSpace_102: BoardSpace
-    BoardSpace_103: BoardSpace
+    GreenSpace_11: BoardSpace
+    RedSpace_12: BoardSpace
+    PurpleSpace_12: BoardSpace
+    YellowSpace_12: BoardSpace
+    BlueSpace_12: BoardSpace
+    OrangeSpace_12: BoardSpace
+    GreenSpace_12: BoardSpace
+    RedSpace_13: BoardSpace
+    PurpleSpace_13: BoardSpace
+    YellowSpace_13: BoardSpace
+    StickySpace_1: BoardSpace
+    OrangeSpace_13: BoardSpace
+    GreenSpace_13: BoardSpace
+    RedSpace_14: BoardSpace
+    PurpleSpace_14: BoardSpace
+    YellowSpace_14: BoardSpace
+    BlueSpace_14: BoardSpace
+    OrangeSpace_14: BoardSpace
+    GreenSpace_14: BoardSpace
+    RedSpace_15: BoardSpace
+    Lollipop: TreatSpace
+    PurpleSpace_15: BoardSpace
+    YellowSpace_15: BoardSpace
+    BlueSpace_15: BoardSpace
+    OrangeSpace_15: BoardSpace
+    GreenSpace_15: BoardSpace
+    RedSpace_16: BoardSpace
+    PurpleSpace_16: BoardSpace
     Frost: TreatSpace
-    BoardSpace_105: BoardSpace
-    BoardSpace_106: BoardSpace
-    BoardSpace_107: BoardSpace
-    BoardSpace_108: BoardSpace
-    BoardSpace_109: BoardSpace
-    BoardSpace_110: BoardSpace
-    BoardSpace_111: BoardSpace
-    BoardSpace_112: BoardSpace
-    BoardSpace_113: BoardSpace
-    BoardSpace_114: BoardSpace
-    BoardSpace_115: BoardSpace
-    BoardSpace_116: BoardSpace
-    BoardSpace_117: BoardSpace
-    BoardSpace_118: BoardSpace
-    BoardSpace_119: BoardSpace
-    BoardSpace_120: BoardSpace
-    BoardSpace_121: BoardSpace
-    StickySpace_3: BoardSpace
-    BoardSpace_123: BoardSpace
-    BoardSpace_124: BoardSpace
-    BoardSpace_125: BoardSpace
-    BoardSpace_126: BoardSpace
-    BoardSpace_127: BoardSpace
-    BoardSpace_128: BoardSpace
-    BoardSpace_129: BoardSpace
-    BoardSpace_130: BoardSpace
-    BoardSpace_131: BoardSpace
-    BoardSpace_132: BoardSpace
-    BoardSpace_133: BoardSpace
-    BoardSpace_134: BoardSpace
-    BoardSpace_135: BoardSpace
+    YellowSpace_16: BoardSpace
+    BlueSpace_16: BoardSpace
+    OrangeSpace_16: BoardSpace
+    GreenSpace_16: BoardSpace
+    RedSpace_17: BoardSpace
+    PurpleSpace_17: BoardSpace
+    YellowSpace_17: BoardSpace
+    BlueSpace_17: BoardSpace
+    OrangeSpace_17: BoardSpace
+    GreenSpace_17: BoardSpace
+    RedSpace_18: BoardSpace
+    PurpleSpace_18: BoardSpace
+    YellowSpace_18: BoardSpace
+    BlueSpace_18: BoardSpace
+    OrangeSpace_18: BoardSpace
+    GreenSpace_18: BoardSpace
+    StickySpace_2: BoardSpace
+    PurpleSpace_19: BoardSpace
+    YellowSpace_19: BoardSpace
+    BlueSpace_19: BoardSpace
+    OrangeSpace_19: BoardSpace
+    GreenSpace_19: BoardSpace
+    RedSpace_20: BoardSpace
+    PurpleSpace_20: BoardSpace
+    YellowSpace_20: BoardSpace
+    BlueSpace_20: BoardSpace
+    OrangeSpace_20: BoardSpace
+    GreenSpace_20: BoardSpace
+    RedSpace_21: BoardSpace
+    PurpleSpace_21: BoardSpace
     EndSpace: BoardSpace
-
-    @classmethod
-    def length(cls):
-        return len([key for key in cls.__dict__.keys() if key[0] != '_']) - 1
 
 class Board:
     def __init__(self) -> None:
         self.board_spaces: BoardSpaces = self.generate_board()
 
     def generate_board(self) -> BoardSpaces:
-        board: BoardSpaces = BoardSpaces(
+        return BoardSpaces(
             BoardSpace(Color.START, 0),
-            BoardSpace(Color.RED, 1),
-            BoardSpace(Color.PURPLE, 2),
-            BoardSpace(Color.YELLOW, 3),
-            BoardSpace(Color.BLUE, 4),
+            BoardSpace(Color.RED, 0),
+            BoardSpace(Color.PURPLE, 0),
+            BoardSpace(Color.YELLOW, 0),
+            BoardSpace(Color.BLUE, 0),
             ShortcutSpace(Shortcut.RAINBOW_TRAIL),
+            BoardSpace(Color.GREEN, 0),
+            BoardSpace(Color.RED, 1),
+            BoardSpace(Color.PURPLE, 1),
+            TreatSpace(Treat.PLUMB),
+            BoardSpace(Color.YELLOW, 1),
+            BoardSpace(Color.BLUE, 1),
+            BoardSpace(Color.ORANGE, 1),
+            BoardSpace(Color.GREEN, 1),
+            BoardSpace(Color.RED, 2),
+            BoardSpace(Color.PURPLE, 2),
+            BoardSpace(Color.YELLOW, 2),
+            BoardSpace(Color.BLUE, 2),
+            TreatSpace(Treat.CANDY_CANE),
+            BoardSpace(Color.ORANGE, 2),
+            BoardSpace(Color.GREEN, 2),
+            BoardSpace(Color.RED, 3),
+            BoardSpace(Color.PURPLE, 3),
+            BoardSpace(Color.YELLOW, 3),
+            BoardSpace(Color.BLUE, 3),
+            BoardSpace(Color.ORANGE, 3),
+            BoardSpace(Color.GREEN, 3),
+            BoardSpace(Color.RED, 4),
+            BoardSpace(Color.PURPLE, 4),
+            BoardSpace(Color.YELLOW, 4),
+            BoardSpace(Color.BLUE, 4),
+            BoardSpace(Color.ORANGE, 4),
+            BoardSpace(Color.GREEN, 4),
+            BoardSpace(Color.RED, 5),
+            ShortcutSpace(Shortcut.GUMDROP_PASS),
+            BoardSpace(Color.YELLOW, 5),
+            BoardSpace(Color.BLUE, 5),
+            BoardSpace(Color.ORANGE, 5),
+            BoardSpace(Color.GREEN, 5),
+            BoardSpace(Color.RED, 6),
+            BoardSpace(Color.PURPLE, 6),
+            BoardSpace(Color.YELLOW, 6),
+            BoardSpace(Color.BLUE, 6),
+            TreatSpace(Treat.GUMDROP),
+            BoardSpace(Color.ORANGE, 6),
             BoardSpace(Color.GREEN, 6),
             BoardSpace(Color.RED, 7),
+            BoardSpace(Color.PURPLE, 7),
+            BoardSpace(Color.YELLOW, 7, sticky=True),
+            BoardSpace(Color.BLUE, 7),
+            BoardSpace(Color.ORANGE, 7),
+            BoardSpace(Color.GREEN, 7),
+            BoardSpace(Color.RED, 8),
             BoardSpace(Color.PURPLE, 8),
-            TreatSpace(Treat.PLUMB),
+            BoardSpace(Color.YELLOW, 8),
+            BoardSpace(Color.BLUE, 8),
+            BoardSpace(Color.ORANGE, 8),
+            BoardSpace(Color.GREEN, 8),
+            BoardSpace(Color.RED, 9),
+            BoardSpace(Color.PURPLE, 9),
+            BoardSpace(Color.YELLOW, 9),
+            BoardSpace(Color.BLUE, 9),
+            BoardSpace(Color.ORANGE, 9),
+            BoardSpace(Color.GREEN, 9),
+            BoardSpace(Color.RED, 10),
+            BoardSpace(Color.PURPLE, 10),
             BoardSpace(Color.YELLOW, 10),
+            BoardSpace(Color.BLUE, 10),
+            BoardSpace(Color.ORANGE, 10),
+            BoardSpace(Color.GREEN, 10),
+            BoardSpace(Color.RED, 11),
+            BoardSpace(Color.PURPLE, 11),
+            BoardSpace(Color.YELLOW, 11),
             BoardSpace(Color.BLUE, 11),
+            BoardSpace(Color.ORANGE, 11),
+            TreatSpace(Treat.NUT),
+            BoardSpace(Color.GREEN, 11),
+            BoardSpace(Color.RED, 12),
+            BoardSpace(Color.PURPLE, 12),
+            BoardSpace(Color.YELLOW, 12),
+            BoardSpace(Color.BLUE, 12),
             BoardSpace(Color.ORANGE, 12),
+            BoardSpace(Color.GREEN, 12),
+            BoardSpace(Color.RED, 13),
+            BoardSpace(Color.PURPLE, 13),
+            BoardSpace(Color.YELLOW, 13),
+            BoardSpace(Color.BLUE, 13, sticky=True),
+            BoardSpace(Color.ORANGE, 13),
             BoardSpace(Color.GREEN, 13),
             BoardSpace(Color.RED, 14),
+            BoardSpace(Color.PURPLE, 14),
+            BoardSpace(Color.YELLOW, 14),
+            BoardSpace(Color.BLUE, 14),
+            BoardSpace(Color.ORANGE, 14),
+            BoardSpace(Color.GREEN, 14),
+            BoardSpace(Color.RED, 15),
+            TreatSpace(Treat.LOLLIPOP),
             BoardSpace(Color.PURPLE, 15),
+            BoardSpace(Color.YELLOW, 15),
+            BoardSpace(Color.BLUE, 15),
+            BoardSpace(Color.ORANGE, 15),
+            BoardSpace(Color.GREEN, 15),
+            BoardSpace(Color.RED, 16),
+            BoardSpace(Color.PURPLE, 16),
+            TreatSpace(Treat.FROST),
             BoardSpace(Color.YELLOW, 16),
+            BoardSpace(Color.BLUE, 16),
+            BoardSpace(Color.ORANGE, 16),
+            BoardSpace(Color.GREEN, 16),
+            BoardSpace(Color.RED, 17),
+            BoardSpace(Color.PURPLE, 17),
+            BoardSpace(Color.YELLOW, 17),
             BoardSpace(Color.BLUE, 17),
-            TreatSpace(Treat.CANDY_CANE),
+            BoardSpace(Color.ORANGE, 17),
+            BoardSpace(Color.GREEN, 17),
+            BoardSpace(Color.RED, 18),
+            BoardSpace(Color.PURPLE, 18),
+            BoardSpace(Color.YELLOW, 18),
+            BoardSpace(Color.BLUE, 18),
+            BoardSpace(Color.ORANGE, 18),
+            BoardSpace(Color.GREEN, 18),
+            BoardSpace(Color.RED, 19, sticky=True),
+            BoardSpace(Color.PURPLE, 19),
+            BoardSpace(Color.YELLOW, 19),
+            BoardSpace(Color.BLUE, 19),
             BoardSpace(Color.ORANGE, 19),
+            BoardSpace(Color.GREEN, 19),
+            BoardSpace(Color.RED, 20),
+            BoardSpace(Color.PURPLE, 20),
+            BoardSpace(Color.YELLOW, 20),
+            BoardSpace(Color.BLUE, 20),
+            BoardSpace(Color.ORANGE, 20),
             BoardSpace(Color.GREEN, 20),
             BoardSpace(Color.RED, 21),
-            BoardSpace(Color.PURPLE, 22),
-            BoardSpace(Color.YELLOW, 23),
-            BoardSpace(Color.BLUE, 24),
-            BoardSpace(Color.ORANGE, 25),
-            BoardSpace(Color.GREEN, 26),
-            BoardSpace(Color.RED, 27),
-            BoardSpace(Color.PURPLE, 28),
-            BoardSpace(Color.YELLOW, 29),
-            BoardSpace(Color.BLUE, 30),
-            BoardSpace(Color.ORANGE, 31),
-            BoardSpace(Color.GREEN, 32),
-            BoardSpace(Color.RED, 33),
-            ShortcutSpace(Shortcut.GUMDROP_PASS),
-            BoardSpace(Color.YELLOW, 35),
-            BoardSpace(Color.BLUE, 36),
-            BoardSpace(Color.ORANGE, 37),
-            BoardSpace(Color.GREEN, 38),
-            BoardSpace(Color.RED, 39),
-            BoardSpace(Color.PURPLE, 40),
-            BoardSpace(Color.YELLOW, 41),
-            BoardSpace(Color.BLUE, 42),
-            TreatSpace(Treat.GUMDROP),
-            BoardSpace(Color.ORANGE, 44),
-            BoardSpace(Color.GREEN, 45),
-            BoardSpace(Color.RED, 46),
-            BoardSpace(Color.PURPLE, 47),
-            BoardSpace(Color.YELLOW, 48, sticky=True),
-            BoardSpace(Color.BLUE, 49),
-            BoardSpace(Color.ORANGE, 50),
-            BoardSpace(Color.GREEN, 51),
-            BoardSpace(Color.RED, 52),
-            BoardSpace(Color.PURPLE, 53),
-            BoardSpace(Color.YELLOW, 54),
-            BoardSpace(Color.BLUE, 55),
-            BoardSpace(Color.ORANGE, 56),
-            BoardSpace(Color.GREEN, 57),
-            BoardSpace(Color.RED, 58),
-            BoardSpace(Color.PURPLE, 59),
-            BoardSpace(Color.YELLOW, 60),
-            BoardSpace(Color.BLUE, 61),
-            BoardSpace(Color.ORANGE, 62),
-            BoardSpace(Color.GREEN, 63),
-            BoardSpace(Color.RED, 64),
-            BoardSpace(Color.PURPLE, 65),
-            BoardSpace(Color.YELLOW, 66),
-            BoardSpace(Color.BLUE, 67),
-            BoardSpace(Color.ORANGE, 68),
-            BoardSpace(Color.GREEN, 69),
-            BoardSpace(Color.RED, 70),
-            BoardSpace(Color.PURPLE, 71),
-            BoardSpace(Color.YELLOW, 72),
-            BoardSpace(Color.BLUE, 73),
-            BoardSpace(Color.ORANGE, 74),
-            TreatSpace(Treat.NUT),
-            BoardSpace(Color.GREEN, 76),
-            BoardSpace(Color.RED, 77),
-            BoardSpace(Color.PURPLE, 78),
-            BoardSpace(Color.YELLOW, 79),
-            BoardSpace(Color.BLUE, 80),
-            BoardSpace(Color.ORANGE, 81),
-            BoardSpace(Color.GREEN, 82),
-            BoardSpace(Color.RED, 83),
-            BoardSpace(Color.PURPLE, 84),
-            BoardSpace(Color.YELLOW, 85),
-            BoardSpace(Color.BLUE, 86, sticky=True),
-            BoardSpace(Color.ORANGE, 87),
-            BoardSpace(Color.GREEN, 88),
-            BoardSpace(Color.RED, 89),
-            BoardSpace(Color.PURPLE, 90),
-            BoardSpace(Color.YELLOW, 91),
-            BoardSpace(Color.BLUE, 92),
-            BoardSpace(Color.ORANGE, 93),
-            BoardSpace(Color.GREEN, 94),
-            BoardSpace(Color.RED, 95),
-            TreatSpace(Treat.LOLLIPOP),
-            BoardSpace(Color.PURPLE, 97),
-            BoardSpace(Color.YELLOW, 98),
-            BoardSpace(Color.BLUE, 99),
-            BoardSpace(Color.ORANGE, 100),
-            BoardSpace(Color.GREEN, 101),
-            BoardSpace(Color.RED, 102),
-            BoardSpace(Color.PURPLE, 103),
-            TreatSpace(Treat.FROST),
-            BoardSpace(Color.YELLOW, 105),
-            BoardSpace(Color.BLUE, 106),
-            BoardSpace(Color.ORANGE, 107),
-            BoardSpace(Color.GREEN, 108),
-            BoardSpace(Color.RED, 109),
-            BoardSpace(Color.PURPLE, 110),
-            BoardSpace(Color.RED, 111),
-            BoardSpace(Color.YELLOW, 112),
-            BoardSpace(Color.BLUE, 113),
-            BoardSpace(Color.ORANGE, 114),
-            BoardSpace(Color.GREEN, 115),
-            BoardSpace(Color.RED, 116),
-            BoardSpace(Color.PURPLE, 117),
-            BoardSpace(Color.YELLOW, 118),
-            BoardSpace(Color.BLUE, 119),
-            BoardSpace(Color.ORANGE, 120),
-            BoardSpace(Color.GREEN, 121),
-            BoardSpace(Color.RED, 122, sticky=True),
-            BoardSpace(Color.PURPLE, 123),
-            BoardSpace(Color.YELLOW, 124),
-            BoardSpace(Color.BLUE, 125),
-            BoardSpace(Color.ORANGE, 126),
-            BoardSpace(Color.GREEN, 127),
-            BoardSpace(Color.RED, 128),
-            BoardSpace(Color.PURPLE, 129),
-            BoardSpace(Color.YELLOW, 130),
-            BoardSpace(Color.BLUE, 131),
-            BoardSpace(Color.ORANGE, 132),
-            BoardSpace(Color.GREEN, 133),
-            BoardSpace(Color.RED, 134),
-            BoardSpace(Color.PURPLE, 135),
-            BoardSpace(Color.END, 136),
+            BoardSpace(Color.PURPLE, 21),
+            BoardSpace(Color.END, 0),
         )
-        
-        return board
