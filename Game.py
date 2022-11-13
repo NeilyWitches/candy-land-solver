@@ -29,15 +29,13 @@ class Game:
         self.start_game()
 
     def start_game(self) -> None:
-        game_over: bool = self.check_if_game_over()
-
-        # while not game_over:
+        # while not self.is_game_over():
             # self.display_game_state()
             # self.display_probabilities()
             # self.user_inputs_next_turn()
-            # game_over = self.check_if_game_over()
+        pass
 
-    def check_if_game_over(self) -> bool:
+    def is_game_over(self) -> bool:
         for player in self.players:
             if player.board_space.color is Color.END:
                 return True
@@ -73,7 +71,7 @@ class Game:
             raise ValueError("Cannot move a player to a treat space without a treat card")
 
         # locate the board space
-        treat_space: Union[BoardSpace, None] = None
+        treat_space: BoardSpace
         board_spaces: BoardSpaces = self.board.board_spaces
         for board_space in board_spaces:
             if board_space.treat == treat_card.treat:
@@ -93,4 +91,22 @@ class Game:
 
         raise ValueError("Current player not found")
 
-    # def move_curr_player_to_next(color: Color) -> None:
+    def move_curr_player_to_next(self, color: Color) -> None:
+        # find the next board space
+        # the board space whose position is one more than the curr player's position
+        curr_player_position: int = self.current_player().board_space.position
+        next_position: int = curr_player_position + 1
+        # locate the boardspace with this position that has the same color as the players current board space
+        next_board_space: BoardSpace
+        board_space_not_found: bool = True
+        for board_space in self.board.board_spaces:
+            if board_space.color == color and board_space.position == next_position:
+                next_board_space = board_space
+                board_space_not_found = False
+
+        # move curr player to that board space
+        if board_space_not_found:
+            self.current_player().move_player(self.board.board_spaces.EndSpace)
+            return
+
+        self.current_player().move_player(next_board_space)

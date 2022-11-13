@@ -85,7 +85,7 @@ def test_game_over_check() -> None:
     # have made it to the end yet
 
     game: Game = Game()
-    game_over = game.check_if_game_over()
+    game_over = game.is_game_over()
 
     assert game_over == False, "The game is not over"
 
@@ -126,8 +126,8 @@ def test_current_player() -> None:
 def test_move_curr_player_to_next():
     # it should move the current_player and not some other player
     game: Game = Game()
-    current_player: Player = game.players.current_player()
-    current_player.move_player(game.board.board_spaces.BoardSpace_1)
+    current_player: Player = game.current_player()
+    current_player.move_player(game.board.board_spaces.RedSpace_0)
     other_player: Player = game.players.Player_2
     curr_player_board_space_before: BoardSpace = current_player.board_space
     other_player_board_space_before: BoardSpace = other_player.board_space
@@ -147,7 +147,16 @@ def test_move_curr_player_to_next():
     assert curr_player_board_space_after.position > curr_player_board_space_before.position, "The player moved backwards"
 
     # it should not skip the color
-    # assert 
+    assert curr_player_board_space_after.position == 1 + curr_player_board_space_before.position, "The player skipped a space"
 
     # the current player should not have stayed in the same spot
     # especially if they were on that color
+    game.move_curr_player_to_next(Color.BLUE)
+    assert game.current_player().board_space != curr_player_board_space_after
+
+    # the game is over if the current player makes it to the end
+    last_space_before_end: BoardSpace = game.board.board_spaces.PurpleSpace_21
+    game.current_player().move_player(last_space_before_end)
+    game.move_curr_player_to_next(Color.ORANGE)
+
+    assert game.is_game_over() == True, "The game is not over"
