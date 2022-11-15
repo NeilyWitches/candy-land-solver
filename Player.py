@@ -25,3 +25,6 @@ class Player:
             raise ValueError("Can only move the current player")
 
         self.board_space = board_space
+
+    def toggle_is_current_player(self) -> None:
+        self.is_current_player = not self.is_current_player

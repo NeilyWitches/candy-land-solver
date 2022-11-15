@@ -1,4 +1,4 @@
-from typing import Set, NamedTuple
+from typing import NamedTuple
 from player import Player
 from discard_pile import DiscardPile
 from board import Color

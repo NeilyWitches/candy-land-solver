@@ -1,7 +1,7 @@
-from board import Treat, Color
+from board import *
 from deck import Deck
 from typing import Dict, Union, Set
-from card import Card, TreatCard
+from card import *
 from discard_pile import DiscardPile
 
 def test_generate_deck() -> None:

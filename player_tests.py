@@ -29,3 +29,16 @@ def test_move_player() -> None:
     player.move_player(destination_space)
 
     assert player.board_space == destination_space
+
+def test_toggle_is_current_player() -> None:
+    # if used on a player who is not the current player, makes them the current player
+    not_curr_player: Player = Player(1, BoardSpace(Color.BLUE, 0))
+    assert not_curr_player.is_current_player == False
+    not_curr_player.toggle_is_current_player()
+    assert not_curr_player.is_current_player == True
+
+    # if used on a player who IS the current player, stops them from being current player
+    curr_player: Player = Player(2, BoardSpace(Color.PURPLE, 20), is_current_player=True)
+    assert curr_player.is_current_player == True
+    curr_player.toggle_is_current_player()
+    assert curr_player.is_current_player == False

@@ -1,10 +1,10 @@
 from game import Game
 from player import Player
-from board import BoardSpace, Color, TreatSpace, Treat
-from game_state import GameState, GameStatePlayers
+from board import *
+from game_state import *
 from discard_pile import DiscardPile
-from card import Card, TreatCard
-from typing import Set
+from card import *
+from typing import Set, List
 
 def test_new_game() -> None:
     # creating a new game without a game state, initializes the game
@@ -119,11 +119,33 @@ def test_move_curr_player_to_treat() -> None:
 def test_current_player() -> None:
     # finds the current player
     game: Game = Game()
-    current_player = game.game_state.players.Player_1
+    assert game.current_player() == game.players.Player_1
 
-    assert game.current_player() == current_player
+def test_next_player() -> None:
+    # find the next player
+    game: Game = Game()
+    assert game.next_player() == game.players.Player_2, "player 2 should be the next player, but is not"
+    assert game.next_player() != game.players.Player_1, "player 1 should not be the next player"
+    assert game.next_player() != game.players.Player_3, "player 3 should not be the next player"
+    assert game.next_player() != game.players.Player_4, "player 4 should not be the next player"
 
-def test_move_curr_player_to_next():
+    # finds the next player even when the current player is player 4
+    game = Game(GameState(
+        GameStatePlayers(
+            Player(1, BoardSpace(Color.BLUE, 0)),
+            Player(2, BoardSpace(Color.GREEN, 5)),
+            Player(3, BoardSpace(Color.ORANGE, 9)),
+            Player(4, BoardSpace(Color.PURPLE, 13), is_current_player=True)
+        ),
+        DiscardPile()
+    ))
+
+    assert game.next_player() == game.players.Player_1, "player 1 should be the next player, but is not"
+    assert game.next_player() != game.players.Player_2, "player 2 should not be the next player"
+    assert game.next_player() != game.players.Player_3, "player 3 should not be the next player"
+    assert game.next_player() != game.players.Player_4, "player 4 should not be the next player"
+
+def test_move_curr_player_to_next() -> None:
     # it should move the current_player and not some other player
     game: Game = Game()
     current_player: Player = game.current_player()
@@ -160,3 +182,88 @@ def test_move_curr_player_to_next():
     game.move_curr_player_to_next(Color.ORANGE)
 
     assert game.is_game_over() == True, "The game is not over"
+
+def test_take_shortcut() -> None:
+    pass
+    # should not move the player if they are not on a shortcut space
+    # game: Game = Game(GameState(
+    #     GameStatePlayers(
+    #         Player(1, BoardSpace())
+    #     )
+    # ))
+    # player: Player = Player(BoardSpace(Color.BLUE, position=14), is_current_player=True)
+    # player_board_space_before: BoardSpace = player.board_space
+    # player.take_shortcut()
+    # assert player_board_space_before == player.board_space
+
+    # # should move the player if they are
+    # player.move_player(Shortcut(Shortcut.RAINBOW_TRAIL))
+    # player_board_space_before = player.board_space
+    # player.take_short()
+    # assert player_board_space_before != player.board_space
+
+    # move the player to the correct shortcut space
+    # assert player.board_space == 
+
+def test_put_players_on_board() -> None:
+    # if you create a game without passing in a game state, all of the players'
+    # board spaces should be the actual board spaces on the board
+    game: Game = Game()
+    for player in game.players:
+        assert player.board_space in game.board.board_spaces, "A player's board space was not found on the board for a game with an empty game state"
+
+    # if you create a game by passing in a game state, all of the players'
+    # board spaces should be the actual board spaces on the board
+    game = Game(GameState(
+        GameStatePlayers(
+            Player(1, BoardSpace(Color.GREEN, 2)),
+            Player(2, BoardSpace(Color.YELLOW, 7, sticky=True)),
+            Player(3, TreatSpace(Treat.NUT)),
+            Player(4, BoardSpace(Color.PURPLE, 8), is_current_player=True)
+        ),
+        DiscardPile()
+    ))
+
+    for player in game.players:
+        assert player.board_space in game.board.board_spaces, "A player's board space was not found on the board for a game with a given game state"
+
+def test_change_players() -> None:
+    # if player 1 is the current player, when you change players, player 2 should be the current player
+    game: Game = Game()
+    players: GameStatePlayers = game.players
+    player_1: Player = players.Player_1
+    player_2: Player = players.Player_2
+    player_3: Player = players.Player_3
+    player_4: Player = players.Player_4
+
+    assert player_1.is_current_player == True, "player 1 should be current player but is not"
+    assert player_2.is_current_player == False, "player 2 should not be current player"
+    assert player_3.is_current_player == False, "player 3 should not be current player"
+    assert player_4.is_current_player == False, "player 4 should not be current player"
+
+    game.change_players()
+
+    assert player_1.is_current_player == False, "player 1 should not be current player"
+    assert player_2.is_current_player == True, "player 2 should be current player but is not"
+    assert player_3.is_current_player == False, "player 3 should not be current player"
+    assert player_4.is_current_player == False, "player 4 should not be current player"
+
+    # make sure it works for a full rotation
+    game.change_players()
+    assert player_1.is_current_player == False, "player 1 should not be current player"
+    assert player_2.is_current_player == False, "player 2 should not be current player"
+    assert player_3.is_current_player == True, "player 3 should be current player, but is not"
+    assert player_4.is_current_player == False, "player 4 should not be current player"
+
+    game.change_players()
+    assert player_1.is_current_player == False, "player 1 should not be current player"
+    assert player_2.is_current_player == False, "player 2 should not be current player"
+    assert player_3.is_current_player == False, "player 3 should not be current player"
+    assert player_4.is_current_player == True, "player 4 should be current player, but is not"
+
+    game.change_players()
+
+    assert player_1.is_current_player == True, "player 1 should be current player, but is not"
+    assert player_2.is_current_player == False, "player 2 should not be current player"
+    assert player_3.is_current_player == False, "player 3 should not be current player"
+    assert player_4.is_current_player == False, "player 4 should not be current player"

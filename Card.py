@@ -1,4 +1,4 @@
-from board import Color, Treat
+from board import *
 from typing import Union
 
 class Card:

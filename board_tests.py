@@ -1,4 +1,4 @@
-from board import Board, BoardSpaces, Color
+from board import *
 from typing import Dict
 
 def test_generate_board() -> None:
