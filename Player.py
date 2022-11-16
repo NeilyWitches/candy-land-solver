@@ -1,4 +1,4 @@
-from board import BoardSpace
+from board_space import *
 from card import Card
 
 class Player:

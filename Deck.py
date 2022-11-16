@@ -12,7 +12,7 @@ class Deck:
         cards: Set[Card] = set()
 
         def make_several_cards(is_single_block: bool, color: Color, quantity: int) -> None:
-            for i in range(quantity):
+            for _ in range(quantity):
                 removed: bool = False
                 for card in discarded_cards:
                     if card.color is color and card.is_single_block is is_single_block:
