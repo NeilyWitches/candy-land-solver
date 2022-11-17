@@ -60,6 +60,9 @@ class Game:
 
     def apply_drawn_card(self, card: Card) -> None:
         # validate that the card is in the deck
+        if card not in self.deck.cards:
+            raise ValueError("Attempted to apply a card that was not found in the deck")
+
         # do not apply the card at all if they are stuck
         if self.current_player().is_stuck(card):
             return

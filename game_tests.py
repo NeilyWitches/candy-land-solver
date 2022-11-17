@@ -266,3 +266,14 @@ def test_take_curr_player_through_shortcut() -> None:
     game.take_curr_player_through_shortcut()
 
     assert player.board_space == game.board.board_spaces.PurpleSpace_7, "The player should be on purple space 7, but they are not"
+
+def test_apply_drawn_card() -> None:
+    game: Game = Game(GameState(
+        GameStatePlayers(
+            Player(1, TreatSpace(Treat.CANDY_CANE)),
+            Player(2, BoardSpace(Color.RED, 13)),
+            Player(3, BoardSpace(Color.START, 0), is_current_player=True),
+            Player(4, BoardSpace(Color.GREEN, 19))
+        ),
+        DiscardPile({ Card(Color.GREEN), Card(Color.RED) })
+    ))

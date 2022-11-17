@@ -42,7 +42,7 @@ class BoardSpace:
                 TreatSpace(Treat.CANDY_CANE, 15)"""
             )
         if position < 0 or position > 21:
-            raise ValueError("position must be in between 0 and 136 inclusive")
+            raise ValueError("position must be in between 0 and 21 inclusive")
         if sticky:
             is_sticky_1: bool = position == 7 and color == Color.YELLOW
             is_sticky_2: bool = position == 13 and color == Color.BLUE
@@ -51,12 +51,16 @@ class BoardSpace:
             if not is_sticky_1 and not is_sticky_2 and not is_sticky_3:
                 raise ValueError("Invalid sticky space")
 
+        if color == Color.ORANGE and position == 0:
+            raise ValueError("The space with color Orange and position 0 is reserved for the rainbow trail shortcut")
+        if color == Color.PURPLE and position == 5:
+            raise ValueError("The space with color Purple and position 5 is reserved for the gumdrop pass shortcut")
+
         self.color: Color = color
         self.position: int = position
         self.sticky: bool = sticky
         self.shortcut: Union[None, Shortcut] = None
         self.treat: Union[None, Treat] = None
-
 
 class ShortcutSpace(BoardSpace):
     def __init__(self, shortcut: Shortcut) -> None:
