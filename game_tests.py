@@ -165,9 +165,6 @@ def test_move_curr_player_to_treat() -> None:
     # the current player should be moved to the correct treat space
     assert current_player.board_space == game.board.board_spaces.CandyCane, "The current player is on the wrong board space"
 
-# def test_apply_drawn_card() -> None:
-
-
 def test_current_player() -> None:
     # finds the current player
     game: Game = Game()

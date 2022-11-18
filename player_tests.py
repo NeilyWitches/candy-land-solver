@@ -2,6 +2,7 @@ from player import Player
 from board_space import *
 from card import Card
 from game import Game
+from typing import List
 
 def test_is_stuck() -> None:
     # if the player is on a sticky space and the card drawn does not unstick the player, they should be stuck
@@ -43,3 +44,40 @@ def test_toggle_is_current_player() -> None:
     assert curr_player.is_current_player == True, "The player should be the current player, but they are not"
     curr_player.toggle_is_current_player()
     assert curr_player.is_current_player == False, "The player should not be the current player, but they are"
+
+def test_took_shortcut() -> None:
+    game: Game = Game()
+
+    orange_card: Card
+    other_cards: List[Card] = []
+    for card in game.deck.cards:
+        if card.color == Color.ORANGE:
+            orange_card = card
+            break
+
+    other_card_count: int = 0
+    for card in game.deck.cards:
+        if card.color != Color.ORANGE:
+            other_cards.append(card)
+            other_card_count += 1
+            if other_card_count == 4:
+                break
+
+    assert game.players.Player_1.took_shortcut == False, "The current player has not yet taken the shortcut so their took shortcut boolean should be False but it is not"
+    game.take_turn(orange_card)
+    assert game.players.Player_1.board_space == game.board.board_spaces.PurpleSpace_9, "The player should be on purple 9, but they are not"
+    assert game.players.Player_1.took_shortcut == True, "Player 1 just took a shortcut, but their took_shortcut attribute does not reflect that"
+
+    for card in other_cards:
+        game.take_turn(card)
+
+    for player in game.players:
+        assert player.took_shortcut == False, "Every player should not have just taken a shortcut, but at least one of them did"
+
+def test_toggle_took_shortcut() -> None:
+    player: Player = Player(1, BoardSpace(Color.START, 0))
+    assert player.took_shortcut == False, "took shortcut should be False, but it is True"
+    player.toggle_took_shortcut(True)
+    assert player.took_shortcut == True, "took shortcut should be True, but it is False"
+    player.toggle_took_shortcut(False)
+    assert player.took_shortcut == False, "took shortcut should be False, but it is True"
