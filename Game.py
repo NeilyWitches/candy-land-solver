@@ -53,11 +53,10 @@ class Game:
         pass
     
     def take_turn(self, card: Card) -> None:
-        # draw card
         self.deck.draw_card(card)
-        # apply card
-        # discard card
-        # change players
+        self.apply_drawn_card(card)
+        self.discard_pile.add_card(card)
+        self.change_players()
 
     def is_game_over(self) -> bool:
         for player in self.players:

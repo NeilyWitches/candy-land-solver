@@ -81,7 +81,7 @@ def has_correct_discard_pile(discard_pile: DiscardPile, correct_discard_pile: Di
 
     return len(bucket) == len(discard_pile.cards)    
 
-def test_game_over_check() -> None:
+def test_game_over() -> None:
     # it should know the game is not over when none of the players 
     # have made it to the end yet
 
@@ -90,9 +90,60 @@ def test_game_over_check() -> None:
 
     assert game_over == False, "The game should not be over, but it is"
 
-    # take turns until someone wins
-    # game.change_game_state()
+    # take turns until player 1 wins
+    cards: List[Card] = []
+    # cards = []
+    for card in game.deck.cards:
+        if card.treat == Treat.FROST:
+            cards.append(card)
+            break
+    # cards = [frost]
 
+    cards_count: int = 0
+    for card in game.deck.cards:
+        cards.append(card)
+        cards_count += 1
+        if cards_count == 9:
+            break
+    #            0     1    2        3    4     5     6     7     8    9
+    # cards = [frost, card, card, card, card, card, card, card, card, card]
+
+    cards_count = 0
+    for card in game.deck.cards:
+        if card.color == Color.PURPLE and card.is_single_block == False:
+            cards.append(card)
+            cards_count += 1
+        if cards_count == 3:
+            break
+
+    #            0     1    2        3    4     5     6     7     8    9       10            11               12
+    # cards = [frost, card, card, card, card, card, card, card, card, card, double purple, double purple, double purple]
+
+    game.take_turn(cards[0])
+    for i in range(1, 4):
+        game.take_turn(cards[i])
+
+    game.take_turn(cards.pop())
+    #            0     1    2        3    4     5     6     7     8    9       10            11      
+    # cards = [frost, card, card, card, card, card, card, card, card, card, double purple, double purple]
+
+    for i in range(4, 7):
+        game.take_turn(cards[i])
+
+    game.take_turn(cards.pop())
+    #            0     1    2        3    4     5     6     7     8    9       10          
+    # cards = [frost, card, card, card, card, card, card, card, card, card, double purple]
+
+    for i in range(7, 10):
+        game.take_turn(cards[i])
+
+    game.take_turn(cards.pop())
+    #            0     1    2        3    4     5     6     7     8    9    
+    # cards = [frost, card, card, card, card, card, card, card, card, card]
+
+    assert game.players.Player_1.board_space.color == Color.END, "Player 1 should have made it to the end, but they did not"
+    assert game.is_game_over() == True, "The game should be over, but it is not"
+    
 def test_move_curr_player_to_treat() -> None:
     # only the current player should be moved
     game: Game = Game()

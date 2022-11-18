@@ -1,5 +1,5 @@
 # candy-land-solver
-gives u the probability of each player winning the game at any given state
+gives u each player's probability of winning the game at any given game state
 
 
 - object oriented
