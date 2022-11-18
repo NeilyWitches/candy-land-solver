@@ -47,9 +47,17 @@ class Game:
         # while not self.is_game_over():
             # self.display_game_state()
             # self.display_probabilities()
-            # self.user_inputs_next_turn()
-            # self.take_turn()
+            # input = self.user_inputs_next_turn()
+            # card = game.deck.find_card(input)
+            # self.take_turn(card)
         pass
+    
+    def take_turn(self, card: Card) -> None:
+        # draw card
+        self.deck.draw_card(card)
+        # apply card
+        # discard card
+        # change players
 
     def is_game_over(self) -> bool:
         for player in self.players:
@@ -59,11 +67,7 @@ class Game:
         return False
 
     def apply_drawn_card(self, card: Card) -> None:
-        # validate that the card is in the deck
-        if card not in self.deck.cards:
-            raise ValueError("Attempted to apply a card that was not found in the deck")
-
-        # do not apply the card at all if they are stuck
+        # do not apply the card at all if the current player is stuck
         if self.current_player().is_stuck(card):
             return
 

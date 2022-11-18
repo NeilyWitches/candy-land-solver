@@ -53,3 +53,6 @@ class Deck:
         make_treat_card(Treat.FROST)
 
         return cards
+
+    def draw_card(self, card: Card) -> None:
+        self.cards.discard(card)

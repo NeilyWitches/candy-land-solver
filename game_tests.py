@@ -5,6 +5,7 @@ from game_state import *
 from discard_pile import DiscardPile
 from card import *
 from typing import Set, List
+from deck import Deck
 
 def test_new_game() -> None:
     # creating a new game without a game state, initializes the game
@@ -89,7 +90,7 @@ def test_game_over_check() -> None:
 
     assert game_over == False, "The game should not be over, but it is"
 
-    # apply drawn cards until someone wins a game
+    # take turns until someone wins
     # game.change_game_state()
 
 def test_move_curr_player_to_treat() -> None:
@@ -272,8 +273,46 @@ def test_apply_drawn_card() -> None:
         GameStatePlayers(
             Player(1, TreatSpace(Treat.CANDY_CANE)),
             Player(2, BoardSpace(Color.RED, 13)),
-            Player(3, BoardSpace(Color.START, 0), is_current_player=True),
-            Player(4, BoardSpace(Color.GREEN, 19))
+            Player(3, BoardSpace(Color.START, 0), is_current_player=False),
+            Player(4, BoardSpace(Color.RED, 19, sticky=True), is_current_player=True)
         ),
-        DiscardPile({ Card(Color.GREEN), Card(Color.RED) })
+        DiscardPile({ 
+            Card(Color.GREEN), 
+            Card(Color.RED, is_single_block=False), 
+            Card(Color.GREEN, is_single_block=True), 
+            Card(Color.GREEN, is_single_block=False),
+            TreatCard(Treat.GUMDROP),
+            TreatCard(Treat.NUT),
+        })
     ))
+
+    # does not apply the card at all if the current player is stuck
+    assert game.current_player().board_space == game.board.board_spaces.StickySpace_2, "The current player should be on sticky space 2, but they are not"
+    game.apply_drawn_card(Card(Color.YELLOW, is_single_block=False))
+    assert game.board.board_spaces.StickySpace_2 == game.players.Player_4.board_space, "Player 4's should not have moved because they are stuck, but they did"
+
+    # successfully unsticks the player if appropriate
+    game.apply_drawn_card(Card(Color.RED, is_single_block=False))
+    assert game.current_player().board_space == game.board.board_spaces.RedSpace_21, "Player 4 should have become unstuck, but they remained on the same board space"
+
+    # successfully applies a treat card
+    game.apply_drawn_card(TreatCard(Treat.LOLLIPOP))
+    assert game.current_player().board_space == game.board.board_spaces.Lollipop, "Player 4 should be on the lollipop space, but they are not"
+
+    # correctly applies a single block card
+    game.apply_drawn_card(Card(Color.ORANGE))
+    assert game.players.Player_4.board_space == game.board.board_spaces.OrangeSpace_15, "The current player should be on orange space 15, but they are not"
+
+    # correctly applies a double block card
+    game.apply_drawn_card(Card(Color.YELLOW, is_single_block=False))
+    assert game.players.Player_4.board_space == game.board.board_spaces.YellowSpace_17, "The current player should be on yellow space 17, but they are not"
+
+    # successfully takes a player through a shortcut if appropriate
+    for _ in range(3):
+        game.change_players()
+
+    assert game.current_player() == game.players.Player_3, "The current player should be player 3, but they are not"
+    
+    game.apply_drawn_card(Card(Color.ORANGE))
+
+    assert game.players.Player_3.board_space == game.board.board_spaces.PurpleSpace_9, "Player 3 should have gone through the shortcut, but they did not"

@@ -126,3 +126,18 @@ def is_complete(deck: Deck, discard_pile = DiscardPile()):
             return False
 
     return True
+
+
+def test_draw_card() -> None:
+    # removes a card from the deck
+    deck: Deck = Deck(DiscardPile())
+    card_to_be_removed: Card
+    for card in deck.cards:
+        card_to_be_removed = card
+        break
+
+    assert card_to_be_removed in deck.cards, "The card should be in the deck, but it is not"
+
+    deck.draw_card(card_to_be_removed)
+
+    assert card_to_be_removed not in deck.cards, "The card should have been removed from the deck, but it was not"
