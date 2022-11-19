@@ -1,6 +1,6 @@
 from typing import Union
 from game_state import *
-from player import Player
+from player import *
 from board import Board, BoardSpaces
 from discard_pile import DiscardPile
 from deck import Deck
@@ -53,15 +53,30 @@ class Game:
         pass
 
     def display_game_state(self):
+        for card in self.deck.cards:
+            if card.color == Color.ORANGE and card.is_single_block:
+                orange_card = card
+                break
+        
+        for card in self.deck.cards:
+            if card.treat:
+                treat_card = card
+                break
+
+        for card in self.deck.cards:
+            if card.color == Color.PURPLE and card.is_single_block == False:
+                double_purple = card
+                break
+
+        for card in self.deck.cards:
+            if card.color == Color.YELLOW and card.is_single_block == True:
+                yellow_card = card
+                break
+
         player_1: Player = self.players.Player_1
         player_2: Player = self.players.Player_2
         player_3: Player = self.players.Player_3
         player_4: Player = self.players.Player_4
-
-        player_1.move_player(self.board.board_spaces.PurpleSpace_0)
-        self.change_players()
-        self.change_players()
-        player_3.move_player(self.board.board_spaces.Plumb)
 
         player_1_current_player: str = "(current player)" if player_1.is_current_player else "                "
         player_2_current_player: str = "(current player)" if player_2.is_current_player else "                "
@@ -70,7 +85,7 @@ class Game:
 
         def format_position(board_space: BoardSpace) -> str:
             position: int = board_space.position + 1
-            if board_space.color == Color.START or board_space.treat:
+            if board_space.color == Color.START or board_space.treat or board_space.color == Color.END:
                 return ""
             if position == 1:
                 return "1st "
@@ -78,8 +93,10 @@ class Game:
                 return "2nd "
             if position == 3:
                 return "3rd "
+            if position == 21:
+                return "21st "
             else:
-                return str(position) + "th"
+                return str(position) + "th "
 
         def format_shortcut(player: Player) -> str:
             if player.shortcut_taken:
@@ -87,11 +104,32 @@ class Game:
             else:
                 return ""
 
+        def format_name(board_space: BoardSpace) -> str:
+            if board_space.treat:
+                return board_space.treat.name
+            else:
+                if board_space.color == Color.END:
+                    return board_space.color.name + " (WINNER!)"
+
+                return board_space.color.name
+
+        def format_sticky(player: Player) -> str:
+            # print(player.stuck_state)
+            if player.stuck_state == StuckState.ON_STICKY_SPACE:
+                return "(sticky)"
+            if player.stuck_state == StuckState.FAILED_TO_GET_UNSTUCK:
+                return "(STUCK!)"
+            if player.stuck_state == StuckState.SUCCEEDED_TO_GET_UNSTUCK:
+                return "(ESCAPED!)" 
+
+            return ""   
+
         def format_board_space(player: Player) -> str:
             player_board_space: str = format_position(player.board_space)
-            player_board_space = player_board_space + player.board_space.color.name
+            player_board_space = player_board_space + format_name(player.board_space) + " "
             player_board_space = player_board_space + format_shortcut(player)
-            return player_board_space + (19 - len(player_board_space))*" "
+            player_board_space = player_board_space + format_sticky(player)
+            return player_board_space + (35 - len(player_board_space))*" "
 
             # 10th Purple (through Rainbow Trail)
 
@@ -103,13 +141,13 @@ class Game:
         print(f"| 1 {player_1_current_player} | {format_board_space(player_1)} | 33.68 %               |")
         print("+--------------------+-------------------------------------+-----------------------+")
         print(
-            f"| 2 {player_2_current_player} | Start                               | 14.21 %               |")
+            f"| 2 {player_2_current_player} | {format_board_space(player_2)} | 14.21 %               |")
         print("+--------------------+-------------------------------------+-----------------------+")
         print(
-            f"| 3 {player_3_current_player} | Plumb                               | 11.90 %               |")
+            f"| 3 {player_3_current_player} | {format_board_space(player_3)} | 11.90 %               |")
         print("+--------------------+-------------------------------------+-----------------------+")
         print(
-            f"| 4 {player_4_current_player} | 6th Yellow (sticky)                 | 55.00 %               |")
+            f"| 4 {player_4_current_player} | {format_board_space(player_4)} | 55.00 %               |")
         print("+--------------------+-------------------------------------+-----------------------+")
     
     def take_turn(self, card: Card) -> None:
