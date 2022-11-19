@@ -45,13 +45,13 @@ def test_toggle_is_current_player() -> None:
     curr_player.toggle_is_current_player()
     assert curr_player.is_current_player == False, "The player should not be the current player, but they are"
 
-def test_took_shortcut() -> None:
+def test_shortcut_taken() -> None:
     game: Game = Game()
 
     orange_card: Card
     other_cards: List[Card] = []
     for card in game.deck.cards:
-        if card.color == Color.ORANGE:
+        if card.color == Color.ORANGE and card.is_single_block:
             orange_card = card
             break
 
@@ -63,21 +63,21 @@ def test_took_shortcut() -> None:
             if other_card_count == 4:
                 break
 
-    assert game.players.Player_1.took_shortcut == False, "The current player has not yet taken the shortcut so their took shortcut boolean should be False but it is not"
+    assert game.players.Player_1.shortcut_taken == None, "The current player has not yet taken the shortcut so their shortcut taken attr should be None"
     game.take_turn(orange_card)
     assert game.players.Player_1.board_space == game.board.board_spaces.PurpleSpace_9, "The player should be on purple 9, but they are not"
-    assert game.players.Player_1.took_shortcut == True, "Player 1 just took a shortcut, but their took_shortcut attribute does not reflect that"
+    assert game.players.Player_1.shortcut_taken == Shortcut.RAINBOW_TRAIL, "Player 1 just took a shortcut, but their shortcut_taken attribute does not reflect that"
 
     for card in other_cards:
         game.take_turn(card)
 
     for player in game.players:
-        assert player.took_shortcut == False, "Every player should not have just taken a shortcut, but at least one of them did"
+        assert player.shortcut_taken == None, "Every player should not have just taken a shortcut, but at least one of them did"
 
-def test_toggle_took_shortcut() -> None:
+def test_update_shortcut_taken() -> None:
     player: Player = Player(1, BoardSpace(Color.START, 0))
-    assert player.took_shortcut == False, "took shortcut should be False, but it is True"
-    player.toggle_took_shortcut(True)
-    assert player.took_shortcut == True, "took shortcut should be True, but it is False"
-    player.toggle_took_shortcut(False)
-    assert player.took_shortcut == False, "took shortcut should be False, but it is True"
+    assert player.shortcut_taken == None, "took shortcut should be None, but it is not None"
+    player.update_shortcut_taken(Shortcut.GUMDROP_PASS)
+    assert player.shortcut_taken == Shortcut.GUMDROP_PASS, "took shortcut should be gumdrop pass, but it is not"
+    player.update_shortcut_taken(Shortcut.RAINBOW_TRAIL)
+    assert player.shortcut_taken == Shortcut.RAINBOW_TRAIL, "took shortcut should be rainbow trail, but it is not"

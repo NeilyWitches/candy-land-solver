@@ -6,7 +6,7 @@ class Player:
         self.player_number: int = player_number
         self.board_space: BoardSpace = board_space
         self.is_current_player: bool = is_current_player
-        self.took_shortcut: bool = False
+        self.shortcut_taken: Union[Shortcut, None] = None
 
     def is_stuck(self, card: Card) -> bool:
         if not self.is_current_player:
@@ -30,5 +30,5 @@ class Player:
     def toggle_is_current_player(self) -> None:
         self.is_current_player = not self.is_current_player
 
-    def toggle_took_shortcut(self, took_shortcut: bool) -> None:
-        self.took_shortcut = took_shortcut
+    def update_shortcut_taken(self, shortcut_taken: Union[Shortcut, None]) -> None:
+        self.shortcut_taken = shortcut_taken

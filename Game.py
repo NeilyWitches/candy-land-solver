@@ -81,14 +81,16 @@ class Game:
             else:
                 return str(position) + "th"
 
-        def format_shortcut(self, player: Player) -> str:
-            # if playe
-            pass
+        def format_shortcut(player: Player) -> str:
+            if player.shortcut_taken:
+                return f"(through {player.shortcut_taken.name})"
+            else:
+                return ""
 
         def format_board_space(player: Player) -> str:
             player_board_space: str = format_position(player.board_space)
             player_board_space = player_board_space + player.board_space.color.name
-            # player_board_space - player_board_space + format_shortcut(player)
+            player_board_space = player_board_space + format_shortcut(player)
             return player_board_space + (19 - len(player_board_space))*" "
 
             # 10th Purple (through Rainbow Trail)
@@ -149,13 +151,13 @@ class Game:
         if current_player.board_space.shortcut is None:
             raise ValueError("only the current player can go through a shortcut")
         
+        current_player.update_shortcut_taken(current_player.board_space.shortcut)
+        
         if current_player.board_space.shortcut == Shortcut.RAINBOW_TRAIL:
             current_player.move_player(self.board.board_spaces.PurpleSpace_9)
         
         if current_player.board_space.shortcut == Shortcut.GUMDROP_PASS:
             current_player.move_player(self.board.board_spaces.PurpleSpace_7)
-
-        current_player.toggle_took_shortcut(True)
 
     def move_curr_player_to_treat(self, treat: Treat) -> None:
         # locate the board space
@@ -172,7 +174,7 @@ class Game:
         current_player: Player = self.current_player()
         current_player.move_player(treat_space)
 
-        current_player.toggle_took_shortcut(False)
+        current_player.update_shortcut_taken(None)
 
     def current_player(self) -> Player:
         for player in self.game_state.players:
@@ -207,7 +209,7 @@ class Game:
         if space_not_found:
             raise ValueError("The current player's board space was not found on the board")
 
-        curr_player.toggle_took_shortcut(False)
+        curr_player.update_shortcut_taken(None)
 
         for i in range(curr_player_board_space_idx + 1, len(self.board.board_spaces)):
             if self.board.board_spaces[i].color == Color.END:
