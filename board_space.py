@@ -19,7 +19,7 @@ class Color(Enum):
 
 
 class Treat(Enum):
-    PLUMB = 1
+    PLUM = 1
     CANDY_CANE = 2
     GUMDROP = 3
     LOLLIPOP = 4
@@ -81,7 +81,7 @@ class ShortcutSpace(BoardSpace):
 class TreatSpace(BoardSpace):
     def __init__(self, treat: Treat) -> None:
         self.treat = treat
-        if treat is Treat.PLUMB:
+        if treat is Treat.PLUM:
             self.position = 0
         elif treat is Treat.CANDY_CANE:
             self.position = 1

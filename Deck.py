@@ -45,7 +45,7 @@ class Deck:
         make_several_cards(True, Color.PURPLE, 6)
         make_several_cards(False, Color.PURPLE, 4)
 
-        make_treat_card(Treat.PLUMB)
+        make_treat_card(Treat.PLUM)
         make_treat_card(Treat.CANDY_CANE)
         make_treat_card(Treat.GUMDROP)
         make_treat_card(Treat.LOLLIPOP)
@@ -56,3 +56,43 @@ class Deck:
 
     def draw_card(self, card: Card) -> None:
         self.cards.discard(card)
+
+    def find_card(self, user_input: str) -> Card:
+        inputted_card: Card
+
+        if user_input not in {"r", "rr", "p", "pp", "y", "yy", "b", "bb", 
+        "o", "oo", "g", "gg", "plum", "candy can", "gumdrop", "lollipop", 
+        "nut", "frost"}:
+            raise ValueError("Invalid input")
+
+        color: Color = Color.PINK
+        is_single_block: bool = True
+        treat: Union[None, Treat] = None
+        if len(user_input) <= 2:
+            if user_input[0] == "r":
+                color = Color.RED
+            if user_input[0] == "p":
+                color = Color.PURPLE
+            if user_input[0] == "y":
+                color = Color.YELLOW
+            if user_input[0] == "b":
+                color = Color.BLUE
+            if user_input[0] == "o":
+                color = Color.ORANGE
+            if user_input[0] == "g":
+                color = Color.GREEN
+        if len(user_input) == 2:
+            is_single_block = False
+        if len(user_input) > 2:
+            treat = Treat[user_input.upper()]
+
+        card_not_found = True
+        for card in self.cards:
+            if card.color == color and card.is_single_block == is_single_block and card.treat == treat:
+                inputted_card = card
+                card_not_found = False
+
+        if card_not_found:
+            raise ValueError("Ran out of that card! May need to modify deck.")
+
+        return inputted_card

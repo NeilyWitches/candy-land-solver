@@ -36,7 +36,7 @@ class DiscardPile:
             "blue double": 0,
             "purple single": 0,
             "purple double": 0,
-            "plumb": 0,
+            "plum": 0,
             "candy cane": 0,
             "gumdrop": 0,
             "lollipop": 0,
@@ -69,8 +69,8 @@ class DiscardPile:
                 counter["purple single"] += 1
             if card.color == Color.PURPLE and card.is_single_block:
                 counter["purple double"] += 1
-            if card.treat == Treat.PLUMB:
-                counter["plumb"] += 1
+            if card.treat == Treat.PLUM:
+                counter["plum"] += 1
             if card.treat == Treat.CANDY_CANE:
                 counter["candy cane"] += 1
             if card.treat == Treat.GUMDROP:
@@ -95,7 +95,7 @@ class DiscardPile:
             "blue double": 4,
             "purple single": 6,
             "purple double": 4,
-            "plumb": 1,
+            "plum": 1,
             "candy cane": 1,
             "gumdrop": 1,
             "lollipop": 1,

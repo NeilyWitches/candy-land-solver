@@ -44,35 +44,54 @@ class Game:
             raise ValueError("Not all players were put on the board")
 
     def start_game(self) -> None:
-        # while not self.is_game_over():
-            # self.display_game_state()
-            # self.display_probabilities()
-            # input = self.user_inputs_next_turn()
-            # card = game.deck.find_card(input)
-            # self.take_turn(card)
-        pass
+        while not self.is_game_over():
+            try:
+                self.display_game_state()
+                # self.display_probabilities()
+                user_input: str = self.user_inputs_next_card()
+                if user_input == "help":
+                    self.help_with_input()
+                    continue
+                if user_input == "quit":
+                    return
+                card = self.deck.find_card(user_input)
+                self.take_turn(card)
 
-    def display_game_state(self):
-        for card in self.deck.cards:
-            if card.color == Color.ORANGE and card.is_single_block:
-                orange_card = card
-                break
-        
-        for card in self.deck.cards:
-            if card.treat:
-                treat_card = card
-                break
+                if self.is_game_over():
+                    self.display_game_state()
+            except Exception as e:
+                print("\n")
+                print(" " + "-"*len(str(e)))
+                print("|" + str(e) + "|")
+                print(" " + "-"*len(str(e)))
+                print("\n")
+                print("Press 'return' to go back to the game and try another input")
+                input()
 
-        for card in self.deck.cards:
-            if card.color == Color.PURPLE and card.is_single_block == False:
-                double_purple = card
-                break
+    def help_with_input(self):
+        print("\n")
+        print("                                            HELP: \n")
+        print("- To enter a basic color card, type the first letter of the name of the color (in lower case)")
+        print("  - once if the card has only 1 square of the color")
+        print("  - twice if the card has 2 squares of that color.")
+        print("  - For example, if you drew a single square purple card, you would type 'p'.") 
+        print("  - 'If you drew a double square red card, you would type 'rr'.")
+        print("- To enter a treat card, type in the full name of the treat in all lower case.")
+        print("  - The treats, in order from the beginning of the board map to the end, are:")
+        print("  - ['plum', 'candy cane', 'gumdrop', 'nut', 'lollipop', 'frost']") 
+        print("- Press 'return' to go back to the game.")
+        input()
 
-        for card in self.deck.cards:
-            if card.color == Color.YELLOW and card.is_single_block == True:
-                yellow_card = card
-                break
+    def user_inputs_next_card(self) -> str:
+        user_input: str
 
+        print("\n")
+        print("Please enter the next drawn card. Type 'help' for help, or 'quit' to quit.")
+        user_input = input()
+
+        return user_input
+
+    def display_game_state(self) -> None:
         player_1: Player = self.players.Player_1
         player_2: Player = self.players.Player_2
         player_3: Player = self.players.Player_3
@@ -114,7 +133,6 @@ class Game:
                 return board_space.color.name
 
         def format_sticky(player: Player) -> str:
-            # print(player.stuck_state)
             if player.stuck_state == StuckState.ON_STICKY_SPACE:
                 return "(sticky)"
             if player.stuck_state == StuckState.FAILED_TO_GET_UNSTUCK:
@@ -140,14 +158,11 @@ class Game:
         print("+--------------------+-------------------------------------+-----------------------+")
         print(f"| 1 {player_1_current_player} | {format_board_space(player_1)} | 33.68 %               |")
         print("+--------------------+-------------------------------------+-----------------------+")
-        print(
-            f"| 2 {player_2_current_player} | {format_board_space(player_2)} | 14.21 %               |")
+        print(f"| 2 {player_2_current_player} | {format_board_space(player_2)} | 14.21 %               |")
         print("+--------------------+-------------------------------------+-----------------------+")
-        print(
-            f"| 3 {player_3_current_player} | {format_board_space(player_3)} | 11.90 %               |")
+        print(f"| 3 {player_3_current_player} | {format_board_space(player_3)} | 11.90 %               |")
         print("+--------------------+-------------------------------------+-----------------------+")
-        print(
-            f"| 4 {player_4_current_player} | {format_board_space(player_4)} | 55.00 %               |")
+        print(f"| 4 {player_4_current_player} | {format_board_space(player_4)} | 55.00 %               |")
         print("+--------------------+-------------------------------------+-----------------------+")
     
     def take_turn(self, card: Card) -> None:

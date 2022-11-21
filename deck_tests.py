@@ -46,7 +46,7 @@ def is_complete(deck: Deck, discard_pile = DiscardPile()):
         "double_block_blue": 0,
         "single_block_purple": 0,
         "double_block_purple": 0,
-        Treat.PLUMB: 0,
+        Treat.PLUM: 0,
         Treat.CANDY_CANE: 0,
         Treat.GUMDROP: 0,
         Treat.LOLLIPOP: 0,
@@ -57,8 +57,8 @@ def is_complete(deck: Deck, discard_pile = DiscardPile()):
     def count_cards_in(pile: Set[Card]) -> None:
         for card in pile:
             if card.treat:
-                if card.treat is Treat.PLUMB:
-                    counter[Treat.PLUMB] += 1
+                if card.treat is Treat.PLUM:
+                    counter[Treat.PLUM] += 1
                 if card.treat is Treat.CANDY_CANE:
                     counter[Treat.CANDY_CANE] += 1
                 if card.treat is Treat.GUMDROP:
@@ -113,7 +113,7 @@ def is_complete(deck: Deck, discard_pile = DiscardPile()):
         "double_block_blue": counter["double_block_blue"] == 4,
         "single_block_purple": counter["single_block_purple"] == 6,
         "double_block_purple": counter["double_block_purple"] == 4,
-        Treat.PLUMB: counter[Treat.PLUMB] == 1,
+        Treat.PLUM: counter[Treat.PLUM] == 1,
         Treat.CANDY_CANE: counter[Treat.CANDY_CANE] == 1,
         Treat.GUMDROP: counter[Treat.GUMDROP] == 1,
         Treat.LOLLIPOP: counter[Treat.LOLLIPOP] == 1,
@@ -141,3 +141,29 @@ def test_draw_card() -> None:
     deck.draw_card(card_to_be_removed)
 
     assert card_to_be_removed not in deck.cards, "The card should have been removed from the deck, but it was not"
+
+def test_find_card() -> None:
+    # should find the right card, double block
+    user_input: str = "pp"
+    deck: Deck = Deck(DiscardPile())
+    card: Card = deck.find_card(user_input)
+
+    assert card.is_single_block == False, "The card should be a double block card, but it is not"
+    assert card.color == Color.PURPLE, "The card should be purple, but it is not"
+    assert card.treat == None, "The card should not be a treat card, but it is"
+
+    # should find the right card, single block
+    user_input = "b"
+    card = deck.find_card(user_input)
+
+    assert card.is_single_block == True, "The card should be single block, but it isn't"
+    assert card.color == Color.BLUE, "The card should be blue, but it is not"
+    assert card.treat == None, "The card should not be a treat card, but it is"
+
+    # should find the right card, treat
+    user_input = "nut"
+    card = deck.find_card(user_input)
+
+    assert card.is_single_block == True, "The card should be a single block card, but it isn't"
+    assert card.color == Color.PINK, "The card should be pink, but it is not"
+    assert card.treat == Treat.NUT, "The treat on the card should be the nut, but it is not"

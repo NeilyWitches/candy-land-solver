@@ -307,7 +307,7 @@ def test_take_curr_player_through_shortcut() -> None:
     assert player.board_space == game.board.board_spaces.PurpleSpace_9, "The player should be on purple space 9, but they are not"
 
     # checking the other shortcut, gumdrop pass
-    game.move_curr_player_to_treat(Treat.PLUMB)
+    game.move_curr_player_to_treat(Treat.PLUM)
     for _ in range(4):
         game.move_curr_player_to_next_color(Color.PURPLE)
 

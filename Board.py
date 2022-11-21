@@ -154,7 +154,7 @@ class Board:
             BoardSpace(Color.GREEN, 0),
             BoardSpace(Color.RED, 1),
             BoardSpace(Color.PURPLE, 1),
-            TreatSpace(Treat.PLUMB),
+            TreatSpace(Treat.PLUM),
             BoardSpace(Color.YELLOW, 1),
             BoardSpace(Color.BLUE, 1),
             BoardSpace(Color.ORANGE, 1),
