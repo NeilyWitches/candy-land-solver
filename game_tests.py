@@ -29,7 +29,7 @@ def test_new_game() -> None:
 
     # creating a new game with a game state, initializes the game
     # with the correct game state
-    game_state = GameState(
+    game_state: GameState = GameState(
         GameStatePlayers(
             Player(1, BoardSpace(Color.BLUE, 3)),
             Player(2, BoardSpace(Color.START, 0)),
@@ -42,7 +42,7 @@ def test_new_game() -> None:
             TreatCard(Treat.FROST)
         })
     )
-    game = Game(game_state)
+    game: Game = Game(game_state)
     game_state = game.game_state
 
     players = game_state.players
