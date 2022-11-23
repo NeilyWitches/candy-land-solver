@@ -28,8 +28,6 @@ class Game:
 
         self.deck: Deck = Deck(self.game_state.discard_pile)
 
-        self.start_game()
-
     def put_players_on_board(self) -> None:
         num_players_placed: int = 0
         for _ in range(4):
@@ -170,12 +168,38 @@ class Game:
         self.discard_pile.add_card(card)
         self.change_players()
 
+    def simulate_turn(self, card: Card) -> None:
+        self.apply_drawn_card(card)
+        self.discard_pile.add_card(card)
+        if not self.is_game_over():
+            self.change_players()
+
+    def undo_turn(self, board_space: BoardSpace, card: Card) -> None:
+        if not self.is_game_over():
+            self.undo_change_players()
+        self.current_player().move_player(board_space)
+        self.discard_pile.remove_card(card)
+
     def is_game_over(self) -> bool:
         for player in self.players:
             if player.board_space.color is Color.END:
                 return True
 
         return False
+
+    def undo_change_players(self) -> None:
+        current_player: Player = self.current_player()
+        prev_player: Player = self.prev_player()
+        current_player.toggle_is_current_player()
+        prev_player.toggle_is_current_player()
+
+    def prev_player(self) -> Player:
+        prev_player_number: int = (self.current_player().player_number + 2) % 4 + 1
+        for player in self.game_state.players:
+            if player.player_number == prev_player_number:
+                return player
+
+        raise ValueError("Prev player not found")
 
     def apply_drawn_card(self, card: Card) -> None:
         # do not apply the card at all if the current player is stuck

@@ -55,7 +55,7 @@ class Deck:
         return cards
 
     def draw_card(self, card: Card) -> None:
-        self.cards.discard(card)
+        self.cards.remove(card)
 
     def find_card(self, user_input: str) -> Card:
         inputted_card: Card

@@ -28,7 +28,7 @@ def test_new_game() -> None:
 
     # creating a new game with a game state, initializes the game
     # with the correct game state
-    game_state: GameState = GameState(
+    game_state = GameState(
         GameStatePlayers(
             Player(1, BoardSpace(Color.BLUE, 3)),
             Player(2, BoardSpace(Color.START, 0)),
@@ -41,7 +41,7 @@ def test_new_game() -> None:
             TreatCard(Treat.FROST)
         })
     )
-    game: Game = Game(game_state)
+    game = Game(game_state)
     game_state = game.game_state
 
     players = game_state.players
@@ -192,6 +192,31 @@ def test_next_player() -> None:
     assert game.next_player() != game.players.Player_2, "player 2 should not be the next player"
     assert game.next_player() != game.players.Player_3, "player 3 should not be the next player"
     assert game.next_player() != game.players.Player_4, "player 4 should not be the next player"
+
+def test_prev_player() -> None:
+    # finds the previous player
+    game: Game
+    game = Game(GameState(
+        GameStatePlayers(
+            Player(1, BoardSpace(Color.BLUE, 0)),
+            Player(2, BoardSpace(Color.GREEN, 5)),
+            Player(3, BoardSpace(Color.ORANGE, 9)),
+            Player(4, BoardSpace(Color.PURPLE, 13), is_current_player=True)
+        ),
+        DiscardPile()
+    ))
+
+    assert game.prev_player() != game.players.Player_1, "player 1 should not be the prev player"
+    assert game.prev_player() != game.players.Player_2, "player 2 should not be the prev player"
+    assert game.prev_player() == game.players.Player_3, "player 3 should be the prev player"
+    assert game.prev_player() != game.players.Player_4, "player 4 should not be the prev player"
+
+    # finds the previous player even when the current player is player 1
+    game = Game()
+    assert game.prev_player() != game.players.Player_1, "player 1 should not be the prev player"
+    assert game.prev_player() != game.players.Player_2, "player 2 should not be the prev player"
+    assert game.prev_player() != game.players.Player_3, "player 3 should not be the prev player"
+    assert game.prev_player() == game.players.Player_4, "player 4 should be the prev player"
 
 def test_move_curr_player_to_next_color() -> None:
     # it should move the current_player and not some other player

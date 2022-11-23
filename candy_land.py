@@ -4,10 +4,13 @@ from player import Player
 from board_space import *
 from card import *
 
-Game()
+game: Game = Game()
+
+if __name__ == '__main__':
+    game.start_game()
 
 # example of starting a game from a given game state
-# Game(GameState(
+# game: Game = Game(GameState(
 #     GameStatePlayers(
 #         Player(1, BoardSpace(Color.GREEN, 5)),
 #         Player(2, BoardSpace(Color.YELLOW, 7, sticky=True)),

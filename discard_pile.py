@@ -21,6 +21,9 @@ class DiscardPile:
     def add_card(self, card: Card) -> None:
         self.cards.add(card)
 
+    def remove_card(self, card: Card) -> None:
+        self.cards.remove(card)
+
     @staticmethod
     def validate_discarded_cards(discarded_cards: Set[Card]) -> bool:
         counter: Dict[str, int] = {
