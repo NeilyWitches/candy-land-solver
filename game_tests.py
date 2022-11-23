@@ -5,7 +5,6 @@ from game_state import *
 from discard_pile import DiscardPile
 from card import *
 from typing import Set, List
-from deck import Deck
 
 def test_new_game() -> None:
     # creating a new game without a game state, initializes the game

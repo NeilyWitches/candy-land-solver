@@ -41,13 +41,12 @@ class Game:
                     self.change_players()
 
         if num_players_placed < 4:
-            raise ValueError("Not all players were put on the board")
+            raise ValueError("Not all players were put on the board. Make sure each board space created in the game state exists on the board in board.py")
 
     def start_game(self) -> None:
         while not self.is_game_over():
             try:
                 self.display_game_state()
-                # self.display_probabilities()
                 user_input: str = self.user_inputs_next_card()
                 if user_input == "help":
                     self.help_with_input()
