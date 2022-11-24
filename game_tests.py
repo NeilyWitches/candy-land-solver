@@ -388,3 +388,25 @@ def test_apply_drawn_card() -> None:
     game.apply_drawn_card(Card(Color.ORANGE))
 
     assert game.players.Player_3.board_space == game.board.board_spaces.PurpleSpace_9, "Player 3 should have gone through the shortcut, but they did not"
+
+def test_undo_turn() -> None:
+    game: Game = Game()
+    board_space_before: BoardSpace = game.current_player().board_space
+
+    turn_card: Card
+    for card in game.deck.cards:
+        turn_card = card
+        break
+    
+    assert game.current_player() == game.players.Player_1, "the current player should be player 1 before any turn is taken, but the aren't"
+    assert turn_card not in game.discard_pile.cards, "the turn card should not be in the discard pile before a turn is taken, but it is"
+
+    game.simulate_turn(turn_card)
+    assert game.current_player() != game.players.Player_1, "taking a turn should have changed players, but it did not"
+    assert game.players.Player_1.board_space != board_space_before, "taking a turn should have moved player 1, but it did not"
+    assert turn_card in game.discard_pile.cards, "the turn card should be in the dicard pile, but it is not"
+
+    game.undo_turn(board_space_before, turn_card)
+    assert game.current_player() == game.game_state.players.Player_1, "undoing the turn should have made player 1 the current player again, but it did not"
+    assert game.players.Player_1.board_space == board_space_before, "undoing the turn should have move player 1 back to their original space, but it did not"
+    assert turn_card not in game.discard_pile.cards, "undoing the turn should have taken the turn_card out of the discard pile, but it did not"
