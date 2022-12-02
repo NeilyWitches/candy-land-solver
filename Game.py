@@ -1,5 +1,4 @@
-from typing import Union
-from game_state import *
+from typing import NamedTuple
 from player import *
 from board import Board, BoardSpaces
 from discard_pile import DiscardPile
@@ -7,39 +6,27 @@ from deck import Deck
 from card import Card
 from board_space import *
 
+class Players(NamedTuple):
+    Player_1: Player
+    Player_2: Player
+    Player_3: Player
+    Player_4: Player
+
 class Game:
-    def __init__(self, game_state: Union[GameState, None] = None) -> None:
+    def __init__(self) -> None:
         self.board: Board = Board()
-        self.game_state: GameState
-        if game_state is None:
-            starting_space: BoardSpace = self.board.board_spaces.StartSpace
-            self.game_state = GameState(GameStatePlayers(
-                Player(1, starting_space, is_current_player=True),
-                Player(2, starting_space),
-                Player(3, starting_space),
-                Player(4, starting_space),
-            ), DiscardPile())
-        else:
-            self.game_state = game_state
-            self.put_players_on_board()
+        starting_space: BoardSpace = self.board.board_spaces.StartSpace
+        self.players: Players = Players(
+            Player(1, starting_space, is_current_player=True),
+            Player(2, starting_space),
+            Player(3, starting_space),
+            Player(4, starting_space)
+        )
+        self.discard_pile: DiscardPile = DiscardPile()    
+        self.deck: Deck = Deck()
 
-        self.players: GameStatePlayers = self.game_state.players
-        self.discard_pile: DiscardPile = self.game_state.discard_pile    
-
-        self.deck: Deck = Deck(self.game_state.discard_pile)
-
-    def put_players_on_board(self) -> None:
-        num_players_placed: int = 0
-        for _ in range(4):
-            current_player: Player = self.current_player()
-            for board_space in self.board.board_spaces:
-                if current_player.board_space.color == board_space.color and current_player.board_space.position == board_space.position and current_player.board_space.sticky == board_space.sticky and current_player.board_space.shortcut == board_space.shortcut and current_player.board_space.treat == board_space.treat:
-                    current_player.move_player(board_space)
-                    num_players_placed += 1
-                    self.change_players()
-
-        if num_players_placed < 4:
-            raise ValueError("Not all players were put on the board. Make sure each board space created in the game state exists on the board in board.py")
+    # def create_copy(self) -> 'Game':
+    #     board: Board = Board()
 
     def start_game(self) -> None:
         while not self.is_game_over():
@@ -195,7 +182,7 @@ class Game:
 
     def prev_player(self) -> Player:
         prev_player_number: int = (self.current_player().player_number + 2) % 4 + 1
-        for player in self.game_state.players:
+        for player in self.players:
             if player.player_number == prev_player_number:
                 return player
 
@@ -253,7 +240,7 @@ class Game:
         current_player.update_shortcut_taken(None)
 
     def current_player(self) -> Player:
-        for player in self.game_state.players:
+        for player in self.players:
             if player.is_current_player:
                 return player
 
@@ -261,7 +248,7 @@ class Game:
 
     def next_player(self) -> Player:
         next_player_number: int = self.current_player().player_number % 4 + 1
-        for player in self.game_state.players:
+        for player in self.players:
             if player.player_number == next_player_number:
                 return player
         

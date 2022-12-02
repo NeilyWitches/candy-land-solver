@@ -4,33 +4,15 @@ from discard_pile import DiscardPile
 from board import *
 
 class Deck:
-    def __init__(self, discard_pile: DiscardPile) -> None:
-        self.cards: Set[Card] = self.generate_deck(discard_pile)
+    def __init__(self) -> None:
+        self.cards: Set[Card] = self.generate_deck()
 
-    def generate_deck(self, discard_pile: DiscardPile) -> Set[Card]:
-        discarded_cards = discard_pile.cards.copy()
+    def generate_deck(self) -> Set[Card]:
         cards: Set[Card] = set()
 
         def make_several_cards(is_single_block: bool, color: Color, quantity: int) -> None:
             for _ in range(quantity):
-                removed: bool = False
-                for card in discarded_cards:
-                    if card.color is color and card.is_single_block is is_single_block:
-                        discarded_cards.remove(card)
-                        removed = True
-                        break
-                if not removed:
-                    cards.add(Card(color, is_single_block))
-
-        def make_treat_card(treat: Treat) -> None:
-            removed: bool = False
-            for card in discarded_cards:
-                if card.treat is treat:
-                    discarded_cards.remove(card)
-                    removed = True
-                    break
-            if not removed:
-                cards.add(TreatCard(treat))
+                cards.add(Card(color, is_single_block))
             
         make_several_cards(True, Color.RED, 6)
         make_several_cards(False, Color.RED, 4)
@@ -45,12 +27,12 @@ class Deck:
         make_several_cards(True, Color.PURPLE, 6)
         make_several_cards(False, Color.PURPLE, 4)
 
-        make_treat_card(Treat.PLUM)
-        make_treat_card(Treat.CANDY_CANE)
-        make_treat_card(Treat.GUMDROP)
-        make_treat_card(Treat.LOLLIPOP)
-        make_treat_card(Treat.NUT)
-        make_treat_card(Treat.FROST)
+        cards.add(TreatCard(Treat.PLUM))
+        cards.add(TreatCard(Treat.CANDY_CANE))
+        cards.add(TreatCard(Treat.GUMDROP))
+        cards.add(TreatCard(Treat.LOLLIPOP))
+        cards.add(TreatCard(Treat.NUT))
+        cards.add(TreatCard(Treat.FROST))
 
         return cards
 

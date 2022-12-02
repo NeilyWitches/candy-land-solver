@@ -8,31 +8,11 @@ def test_generate_deck() -> None:
     # empty discard pile
     discard_pile: DiscardPile = DiscardPile()
 
-    deck: Deck = Deck(discard_pile)
-    # For an empty discard pile, the generated deck should be complete with or without the discard pile
-    assert is_complete(deck, discard_pile) == True, "Deck is not complete with an empty discard pile"
-    assert is_complete(deck) == True, "Deck is not complete without an empty discard pile"
+    deck: Deck = Deck()
+    # the generated deck should be complete
+    assert is_complete(deck) == True, "Deck should be complete"
 
-    # For non-empty discard pile,
-    card_1: Card = Card(Color.BLUE)
-    card_2: Card = Card(Color.GREEN, is_single_block=False)
-    card_3: Card = TreatCard(Treat.CANDY_CANE)
-
-    discard_pile.add_card(card_1)
-    discard_pile.add_card(card_2)
-    discard_pile.add_card(card_3)
-
-    # the generated deck + discard pile is too many cards
-    assert is_complete(deck, discard_pile) == False, "Deck should have too many cards"
-
-    # create a new deck using the new discard pile
-    deck = Deck(discard_pile)
-
-    # the generated deck is only complete WITH the discard pile
-    assert is_complete(deck, discard_pile) == True, "Deck is not complete with a discard pile"
-    assert is_complete(deck) == False, "Deck is complete without a discard pile"
-
-def is_complete(deck: Deck, discard_pile = DiscardPile()):
+def is_complete(deck: Deck):
     counter: Dict[Union[str, Treat], int] = {
         "single_block_red": 0,
         "double_block_red": 0,
@@ -98,7 +78,6 @@ def is_complete(deck: Deck, discard_pile = DiscardPile()):
                         counter["double_block_green"] += 1
 
     count_cards_in(deck.cards)
-    count_cards_in(discard_pile.cards)
 
     check_list: Dict[Union[str, Treat], bool] = {
         "single_block_red": counter["single_block_red"] == 6,
@@ -130,7 +109,7 @@ def is_complete(deck: Deck, discard_pile = DiscardPile()):
 
 def test_draw_card() -> None:
     # removes a card from the deck
-    deck: Deck = Deck(DiscardPile())
+    deck: Deck = Deck()
     card_to_be_removed: Card
     for card in deck.cards:
         card_to_be_removed = card
@@ -145,7 +124,7 @@ def test_draw_card() -> None:
 def test_find_card() -> None:
     # should find the right card, double block
     user_input: str = "pp"
-    deck: Deck = Deck(DiscardPile())
+    deck: Deck = Deck()
     card: Card = deck.find_card(user_input)
 
     assert card.is_single_block == False, "The card should be a double block card, but it is not"
