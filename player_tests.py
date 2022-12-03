@@ -81,3 +81,17 @@ def test_update_shortcut_taken() -> None:
     assert player.shortcut_taken == Shortcut.GUMDROP_PASS, "took shortcut should be gumdrop pass, but it is not"
     player.update_shortcut_taken(Shortcut.RAINBOW_TRAIL)
     assert player.shortcut_taken == Shortcut.RAINBOW_TRAIL, "took shortcut should be rainbow trail, but it is not"
+
+def test_copy() -> None:
+    original: Player = Player(1, BoardSpace(Color.BLUE, 0))
+    copy: Player = original.copy()
+    assert original != copy, "The original should not be equal to the copy, but it is"
+    assert original.player_number == copy.player_number, "The original's player number should be equal to the copy's player number, but it isn't"
+    assert original.board_space != copy.board_space, "The original's board space should not be equal to the copy's board space, but it is"
+    assert original.board_space.color == copy.board_space.color, "The original's board space's color should be the same as the copy's color, but it isn't"
+    assert original.board_space.position == copy.board_space.position, "The original's board space's position should be the same as the copy's position, but it isn't"
+    assert original.board_space.sticky == copy.board_space.sticky, "The original's board space's sticky should be the same as the copy's sticky, but it isn't"
+    assert original.board_space.treat == copy.board_space.treat, "The original's board space's treart should be the same as the copy's treat"
+    assert original.is_current_player == copy.is_current_player, "The original's is current player attribute should be equal to the copy's is current player attribute, but it is not"
+    assert original.shortcut_taken == copy.shortcut_taken, "The original's shortcut taken attribute should be equal to the copy's shortcut taken attribute, but it is not"
+    assert original.stuck_state == copy.stuck_state, "The original's stuck_state attribute should be the same as the copy's but it is not"

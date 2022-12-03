@@ -24,6 +24,86 @@ def test_new_game() -> None:
     assert has_correct_players(players, correct_players) == True, "The game state has incorrect players"
     assert has_correct_discard_pile(discard_pile, correct_discard_pile) == True, "The game state has an incorrect discard pile"
 
+def test_create_copy() -> None:
+    # the memory address of the copy should be different from the original
+    game_original: Game = Game()
+    game_copy: Game = game_original.copy()
+
+    assert game_original != game_copy, "The memory addresses of the copy should be different from the original, but it is not"
+
+    # the game copy's board should have a different memory address than the original game's board
+    assert game_copy.board != game_original.board, "The boards are the same, but they should be different"
+
+    # a single board space should be different
+    assert game_copy.board.board_spaces.StartSpace != game_original.board.board_spaces.StartSpace, "The start space of the copy should be different from the original, but it is not"
+    # but their attributes should be the same
+    assert game_original.board.board_spaces.StartSpace.color == game_copy.board.board_spaces.StartSpace.color, "The color of the copy board space should be the same as the original, but it is not"
+    assert game_original.board.board_spaces.StartSpace.position == game_copy.board.board_spaces.StartSpace.position, "The position of the copy board space should be the same as the original, but it is not"
+    assert game_original.board.board_spaces.StickySpace_0.sticky == game_copy.board.board_spaces.StickySpace_0.sticky, "The sticky attribute of the copy board space should be the same as the original, but it is not"
+    assert game_original.board.board_spaces.GumdropPass.shortcut == game_copy.board.board_spaces.GumdropPass.shortcut, "The shortcut attribute of the copy board space should be the same as the original, but it is not"
+    assert game_original.board.board_spaces.Plumb.treat == game_copy.board.board_spaces.Plumb.treat, "The treat attribute of the copy board space should be the same as the original board space, but it is not"
+
+    # a single player should be different
+    assert game_copy.players.Player_1 != game_original.players.Player_1, "Player 1 of the copy should be different from player 1 of the original, but it is not"
+    # but their attributes should be the same
+    assert game_original.players.Player_1.player_number == game_copy.players.Player_1.player_number, "The player numbers of the copy player should be the same as the original player, but it is not"
+    assert game_original.players.Player_1.is_current_player == game_copy.players.Player_1.is_current_player, "The current player attribute of the copy player should be the same as the original player, but it is not"
+    assert game_original.players.Player_2.is_current_player == game_copy.players.Player_2.is_current_player, "The current plalyer attirubte of the copy player for player 2 should be the same as the original player 2, but is not"
+    assert game_original.players.Player_1.shortcut_taken == game_copy.players.Player_1.shortcut_taken, "The shortcut taken attribute of the copy should be the same as the original, but it is not"
+    assert game_original.players.Player_1.stuck_state == game_copy.players.Player_1.stuck_state, "The stuck state attribute of the copy player should be the same as the original, but it is not"
+    
+    # a single player's board space should be different
+    assert game_copy.players.Player_1.board_space != game_original.players.Player_1.board_space, "The board space of a single player copy should be different from the original, but it is the same"
+    # but the attributes of those board spaces should be the same
+    assert game_original.players.Player_1.board_space.color == game_copy.players.Player_1.board_space.color, "The color of the copy board space of a single player should be the same as the original, but it is not"
+    assert game_original.players.Player_1.board_space.position == game_copy.players.Player_1.board_space.position, "The position of the copy board space of a single player should be the same as the original, but it is not"
+    assert game_original.players.Player_1.board_space.sticky == game_copy.players.Player_1.board_space.sticky, "The sticky attribute of the copy board space of a single player should be the same as the original, but it is not"
+    assert game_original.players.Player_1.board_space.shortcut == game_copy.players.Player_1.board_space.shortcut, "The shortcut attribute of the copy board space of a single player should be the same as the original, but it is not"
+    assert game_original.players.Player_1.board_space.treat == game_copy.players.Player_1.board_space.treat, "The treat attribute of the copy board space of a player should be the same as the original board space, but it is not"
+
+    # the discard piles should differ
+    assert game_copy.discard_pile != game_original.discard_pile, "The copy's discard pile should be different from the original, but it is not"
+
+    # a single card from the decks should differ
+    original_card: Card = game_original.deck.find_card("nut")
+    copy_card: Card = game_copy.deck.find_card("nut")
+    assert original_card != copy_card, "The two nut cards should differ, but they don't"
+    # but their attributes should be the same
+    assert original_card.is_single_block == copy_card.is_single_block, "The original card should have the same is single block attribute as the copy card, but it does not"
+    assert original_card.color == copy_card.color, "The original card should be the same color as the copy card, but is not"
+    assert original_card.treat == copy_card.treat, "The original card should have the same treat attribute as the copy card, but it does not"
+
+    # a single card from the discard piles should differ
+    game_original.take_turn(original_card)
+    game_copy.take_turn(copy_card)
+    assert original_card in game_original.discard_pile.cards, "The original card should now be in the original discard pile, but it is not"
+    assert copy_card in game_copy.discard_pile.cards, "The copy card should now be in the original discard pile, but it is not"
+    assert original_card not in game_copy.discard_pile.cards, "The original card should NOT be in the copy discard pile, but it is"
+    assert copy_card not in game_original.discard_pile.cards, "The copy card should NOT be in the original discard pile, but it is"
+
+def test_copy_players() -> None:
+    game: Game = Game()
+    original_players: Players = game.players
+    copy_players: Players = game.copy_players()
+
+    # a single player should be different
+    assert original_players.Player_1 != copy_players.Player_1, "Player 1 copy should differ from player 1 original, but doesn't" 
+    # but their attributes should be the same
+    assert original_players.Player_1.player_number == copy_players.Player_1.player_number, "The player numbers of the copy player should be the same as the original player, but it is not"
+    assert original_players.Player_1.is_current_player == copy_players.Player_1.is_current_player, "The current player attribute of the copy player should be the same as the original player, but it is not"
+    assert original_players.Player_2.is_current_player == copy_players.Player_2.is_current_player, "The current player attribute of the copy player for player 2 should be the same as the original player 2, but is not"
+    assert original_players.Player_1.shortcut_taken == copy_players.Player_1.shortcut_taken, "The shortcut taken attribute of the copy should be the same as the original, but it is not"
+    assert original_players.Player_1.stuck_state == copy_players.Player_1.stuck_state, "The stuck state attribute of the copy player should be the same as the original, but it is not"
+
+    # a single player's board space should be different
+    assert copy_players.Player_1.board_space != original_players.Player_1.board_space, "The board space of a single player copy should be different from the original, but it is the same"
+    # but the attributes of those board spaces should be the same
+    assert original_players.Player_1.board_space.color == copy_players.Player_1.board_space.color, "The color of the copy board space of a single player should be the same as the original, but it is not"
+    assert original_players.Player_1.board_space.position == copy_players.Player_1.board_space.position, "The position of the copy board space of a single player should be the same as the original, but it is not"
+    assert original_players.Player_1.board_space.sticky == copy_players.Player_1.board_space.sticky, "The sticky attribute of the copy board space of a single player should be the same as the original, but it is not"
+    assert original_players.Player_1.board_space.shortcut == copy_players.Player_1.board_space.shortcut, "The shortcut attribute of the copy board space of a single player should be the same as the original, but it is not"
+    assert original_players.Player_1.board_space.treat == copy_players.Player_1.board_space.treat, "The treat attribute of the copy board space of a player should be the same as the original board space, but it is not"
+
 def has_correct_players(players: Players, correct_players: Players) -> bool:
     for i in range(4):
         if players[i].player_number != correct_players[i].player_number or players[i].board_space.color != correct_players[i].board_space.color or correct_players[i].board_space.position != players[i].board_space.position or correct_players[i].is_current_player != players[i].is_current_player:
@@ -344,3 +424,40 @@ def test_undo_turn() -> None:
     assert game.current_player() == game.players.Player_1, "undoing the turn should have made player 1 the current player again, but it did not"
     assert game.players.Player_1.board_space == board_space_before, "undoing the turn should have move player 1 back to their original space, but it did not"
     assert turn_card not in game.discard_pile.cards, "undoing the turn should have taken the turn_card out of the discard pile, but it did not"
+
+def test_copy() -> None:
+    original: Game = Game()
+    nut_card: Card = original.deck.find_card("nut")
+    assert nut_card in original.deck.cards, "The nut card should be in the deck, but it is not"
+    assert nut_card not in original.discard_pile.cards, "The nut card should not be in the discard pile, but it is"
+    original.take_turn(nut_card)
+    assert nut_card not in original.deck.cards, "The nut card should not be in the deck anymore, but it is"
+    assert nut_card in original.discard_pile.cards, "The nut card should be in the discard pile, but it is not"
+    copy: Game = original.copy()
+    assert copy != original, "The copy should not be equal to the original, but it is"
+    assert copy.board != original.board, "The copy's board should not be equal to the original's board"
+    assert copy.board.board_spaces.BlueSpace_0 != original.board.board_spaces.BlueSpace_0, "A single board space from the copy should not be the same as a single board space from the original, but it is"
+    assert copy.board.board_spaces.BlueSpace_0.color == original.board.board_spaces.BlueSpace_0.color, "The color of a single board space from the copy should be the same as the color of a single board space from the original, but it isn't"
+    assert copy.board.board_spaces.BlueSpace_0.position == original.board.board_spaces.BlueSpace_0.position, "The position of a single board space from the copy should be the same as the color of a single board space from the original, but it isn't"
+    assert copy.board.board_spaces.BlueSpace_0.sticky == original.board.board_spaces.BlueSpace_0.sticky, "The sticky attribute of a single board space from the copy should be the same as the sticky attribute from the original, but it isn't"
+    assert copy.board.board_spaces.BlueSpace_0.shortcut == original.board.board_spaces.BlueSpace_0.shortcut, "The shortcut attribute of a single board space from the copy should be the same as the original, but it is not"
+    assert copy.board.board_spaces.BlueSpace_0.treat == original.board.board_spaces.BlueSpace_0.treat, "The treat attribute of a single board space from the original should be the same as the copy, but it isn't"
+    assert copy.players.Player_1 != original.players.Player_1, "A single player from the copy should not equal a single player from the original, but it is"
+    assert copy.players.Player_1.player_number == original.players.Player_1.player_number, "The player number of a single player from the original should be the same as the copy, but it isn't"
+    assert copy.players.Player_1.board_space != original.players.Player_1.board_space, "The board space of a single player from the original should not be the same as the board space of a single player from the copy, but it is"
+    assert copy.players.Player_1.is_current_player == original.players.Player_1.is_current_player, "The is current player attribute of a single player from the original should be the same as the is current attribute from the copy, but it isn't"
+    assert copy.players.Player_1.shortcut_taken == original.players.Player_1.shortcut_taken, "The shortcut taken attribute of a single player from the original should be the same as the one from the copy, but it isn't"
+    assert copy.players.Player_1.stuck_state == original.players.Player_1.stuck_state, "The stuck state of a single player from the original should be the same as the copy, but it isn't"
+    assert copy.players.Player_1.board_space.color == original.players.Player_1.board_space.color, "The color of the board space of a single player from the original should be the same as the copy, but it isn't"
+    assert copy.players.Player_1.board_space.position == original.players.Player_1.board_space.position, "The position of the board space of a single player from the original should be the same as the copy, but it isn't"
+    assert copy.players.Player_1.board_space.sticky == original.players.Player_1.board_space.sticky, "The sticky attribute of the board space of a single player from the original should be the same as from the copy, but it isn't"
+    assert copy.players.Player_1.board_space.shortcut == original.players.Player_1.board_space.shortcut, "The shortcut attribute of the board space of a single player from the copy should be the seame as that of the original, but it isn't"
+    assert copy.players.Player_1.board_space.treat == original.players.Player_1.board_space.treat, "The treat attribute of the board space of a single player from the original should be the same as from the copy, but it is not"
+    assert copy.discard_pile != original.discard_pile, "The discard piles of the original and copy should not the be same, but they are"
+    assert nut_card not in copy.deck.cards, "The nut card should not be in the copy deck, but it is"
+    assert nut_card not in copy.discard_pile.cards, "The SAME nut card should not be in the discard pile, but it is"
+    for card in copy.discard_pile.cards:
+        assert card.treat == Treat.NUT, "A copy of the nut card should be in the copy's discard pile, but it is not"
+        assert card != nut_card, "The copy of the nut should not be the same as the original"
+    assert copy.deck != original.deck, "The copy deck should not be the same as the original deck"
+    

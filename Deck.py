@@ -78,3 +78,14 @@ class Deck:
             raise ValueError("Ran out of that card! May need to modify deck.")
 
         return inputted_card
+
+    def copy(self) -> 'Deck':
+        copy: Deck = Deck()
+        copy.cards = set()
+        for card in self.cards:
+            if card.treat is not None:
+                copy.cards.add(TreatCard(card.treat))
+            else:
+                copy.cards.add(Card(card.color, card.is_single_block))
+
+        return copy

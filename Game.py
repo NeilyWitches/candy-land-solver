@@ -25,8 +25,26 @@ class Game:
         self.discard_pile: DiscardPile = DiscardPile()    
         self.deck: Deck = Deck()
 
-    # def create_copy(self) -> 'Game':
-    #     board: Board = Board()
+    def copy(self) -> 'Game':
+        game_copy: Game = Game()
+        board: Board = Board()
+        players: Players = self.copy_players()
+        discard_pile: DiscardPile = self.discard_pile.copy()
+        deck: Deck = self.deck.copy()
+        game_copy.board = board
+        game_copy.players = players
+        game_copy.discard_pile = discard_pile
+        game_copy.deck = deck
+
+        return game_copy
+    
+    def copy_players(self) -> Players:
+        return Players(
+            self.players.Player_1.copy(),
+            self.players.Player_2.copy(),
+            self.players.Player_3.copy(),
+            self.players.Player_4.copy()
+        )
 
     def start_game(self) -> None:
         while not self.is_game_over():

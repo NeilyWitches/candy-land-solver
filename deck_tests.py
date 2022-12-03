@@ -146,3 +146,16 @@ def test_find_card() -> None:
     assert card.is_single_block == True, "The card should be a single block card, but it isn't"
     assert card.color == Color.PINK, "The card should be pink, but it is not"
     assert card.treat == Treat.NUT, "The treat on the card should be the nut, but it is not"
+
+def test_copy() -> None:
+    original: Deck = Deck()
+    copy: Deck = original.copy()
+    card: Card = original.find_card("r")
+    assert card in original.cards, "The card should be in the original, but it is not"
+    assert card not in copy.cards, "The card should not be in the copy, but it is"
+    original.draw_card(card)
+    copy = original.copy()
+    assert len(copy.cards) == len(original.cards), "The two decks should have the same length, but they do not"
+    assert original != copy, "The 2 decks should have different addresses in memory, but they do not"
+    assert card not in original.cards, "The card should have been removed from the original deck, but it was not"
+    assert card not in copy.cards, "The card should not be in the copy"

@@ -15,6 +15,16 @@ class Player:
         self.shortcut_taken: Union[Shortcut, None] = None
         self.stuck_state: StuckState = StuckState.NOT_ON_STICKY_SPACE
 
+    def copy(self) -> 'Player':
+        copy: Player =  Player(
+            self.player_number,
+            self.board_space.copy(),
+            self.is_current_player
+        )
+        copy.shortcut_taken = self.shortcut_taken
+        copy.stuck_state = self.stuck_state
+        return copy
+
     def is_stuck(self, card: Card) -> bool:
         if not self.is_current_player:
             raise ValueError("Should only be checking if the CURRENT player is stuck")

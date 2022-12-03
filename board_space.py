@@ -62,6 +62,18 @@ class BoardSpace:
         self.shortcut: Union[None, Shortcut] = None
         self.treat: Union[None, Treat] = None
 
+    def copy(self) -> 'BoardSpace':
+        if self.shortcut is not None:
+            return ShortcutSpace(self.shortcut)
+        if self.treat is not None:
+            return TreatSpace(self.treat)
+        
+        return BoardSpace(
+            self.color,
+            self.position,
+            self.sticky
+        )
+
 class ShortcutSpace(BoardSpace):
     def __init__(self, shortcut: Shortcut) -> None:
         self.shortcut = shortcut

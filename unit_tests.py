@@ -3,6 +3,7 @@ import deck_tests
 import discard_pile_tests
 import game_tests
 import player_tests
+import board_space_tests
 
 board_tests.test_generate_board()
 deck_tests.test_generate_deck()
@@ -23,3 +24,8 @@ deck_tests.test_find_card()
 game_tests.test_prev_player()
 discard_pile_tests.test_remove_card()
 game_tests.test_undo_turn()
+board_space_tests.test_copy()
+player_tests.test_copy()
+game_tests.test_copy_players()
+discard_pile_tests.test_copy()
+deck_tests.test_copy()
