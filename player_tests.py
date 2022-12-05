@@ -3,6 +3,7 @@ from board_space import *
 from card import Card
 from game import Game
 from typing import List
+from board import Board
 
 def test_is_stuck() -> None:
     # if the player is on a sticky space and the card drawn does not unstick the player, they should be stuck
@@ -84,7 +85,7 @@ def test_update_shortcut_taken() -> None:
 
 def test_copy() -> None:
     original: Player = Player(1, BoardSpace(Color.BLUE, 0))
-    copy: Player = original.copy()
+    copy: Player = original.copy(Board())
     assert original != copy, "The original should not be equal to the copy, but it is"
     assert original.player_number == copy.player_number, "The original's player number should be equal to the copy's player number, but it isn't"
     assert original.board_space != copy.board_space, "The original's board space should not be equal to the copy's board space, but it is"

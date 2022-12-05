@@ -1,11 +1,11 @@
-from typing import NamedTuple
+from typing import NamedTuple, List
 from player import *
 from board import Board, BoardSpaces
 from discard_pile import DiscardPile
 from deck import Deck
 from card import Card
 from board_space import *
-
+from prob import compute_probabilities
 class Players(NamedTuple):
     Player_1: Player
     Player_2: Player
@@ -27,23 +27,21 @@ class Game:
 
     def copy(self) -> 'Game':
         game_copy: Game = Game()
-        board: Board = Board()
-        players: Players = self.copy_players()
+        players: Players = self.copy_players(game_copy.board)
         discard_pile: DiscardPile = self.discard_pile.copy()
         deck: Deck = self.deck.copy()
-        game_copy.board = board
         game_copy.players = players
         game_copy.discard_pile = discard_pile
         game_copy.deck = deck
 
         return game_copy
     
-    def copy_players(self) -> Players:
+    def copy_players(self, copy_board: Board) -> Players:
         return Players(
-            self.players.Player_1.copy(),
-            self.players.Player_2.copy(),
-            self.players.Player_3.copy(),
-            self.players.Player_4.copy()
+            self.players.Player_1.copy(copy_board),
+            self.players.Player_2.copy(copy_board),
+            self.players.Player_3.copy(copy_board),
+            self.players.Player_4.copy(copy_board)
         )
 
     def start_game(self) -> None:
@@ -80,7 +78,7 @@ class Game:
         print("  - 'If you drew a double square red card, you would type 'rr'.")
         print("- To enter a treat card, type in the full name of the treat in all lower case.")
         print("  - The treats, in order from the beginning of the board map to the end, are:")
-        print("  - ['plum', 'candy cane', 'gumdrop', 'nut', 'lollipop', 'frost']") 
+        print("  - ['plum', 'candy_cane', 'gumdrop', 'nut', 'lollipop', 'frost']") 
         print("- Press 'return' to go back to the game.")
         input()
 
@@ -151,20 +149,41 @@ class Game:
             player_board_space = player_board_space + format_sticky(player)
             return player_board_space + (35 - len(player_board_space))*" "
 
-            # 10th Purple (through Rainbow Trail)
+        def format_probability(probability: float) -> str:
+            percentage: float = probability * 100
+            rounded: str = str(round(percentage, 2))
+            num_digits_after_decimal: int = 0
+            encounted_decimal: bool = False
+            for char in rounded:
+                if encounted_decimal:
+                    num_digits_after_decimal += 1
+                if char == ".":
+                    encounted_decimal = True
+
+            if num_digits_after_decimal == 1:
+                rounded += "0"
+
+            rounded += " %"
+
+            return rounded + (21 - len(rounded))*" "
+
+        print("Computing probabilities...")
+        probabilities: List[float] = compute_probabilities(100, self)
 
         print("+--------------------+-------------------------------------+-----------------------+")
         print("|                    |                                     |                       |")
         print("|       Player       |          Space on the board         | Proability of winning |")
         print("|                    |                                     |                       |")
         print("+--------------------+-------------------------------------+-----------------------+")
-        print(f"| 1 {player_1_current_player} | {format_board_space(player_1)} | 33.68 %               |")
+        print(f"| 1 {player_1_current_player} | {format_board_space(player_1)} | {format_probability(probabilities[0])} |")
         print("+--------------------+-------------------------------------+-----------------------+")
-        print(f"| 2 {player_2_current_player} | {format_board_space(player_2)} | 14.21 %               |")
+        print(f"| 2 {player_2_current_player} | {format_board_space(player_2)} | {format_probability(probabilities[1])} |")
         print("+--------------------+-------------------------------------+-----------------------+")
-        print(f"| 3 {player_3_current_player} | {format_board_space(player_3)} | 11.90 %               |")
+        print(
+            f"| 3 {player_3_current_player} | {format_board_space(player_3)} | {format_probability(probabilities[2])} |")
         print("+--------------------+-------------------------------------+-----------------------+")
-        print(f"| 4 {player_4_current_player} | {format_board_space(player_4)} | 55.00 %               |")
+        print(
+            f"| 4 {player_4_current_player} | {format_board_space(player_4)} | {format_probability(probabilities[3])} |")
         print("+--------------------+-------------------------------------+-----------------------+")
     
     def take_turn(self, card: Card) -> None:
@@ -173,38 +192,12 @@ class Game:
         self.discard_pile.add_card(card)
         self.change_players()
 
-    def simulate_turn(self, card: Card) -> None:
-        self.apply_drawn_card(card)
-        self.discard_pile.add_card(card)
-        if not self.is_game_over():
-            self.change_players()
-
-    def undo_turn(self, board_space: BoardSpace, card: Card) -> None:
-        if not self.is_game_over():
-            self.undo_change_players()
-        self.current_player().move_player(board_space)
-        self.discard_pile.remove_card(card)
-
     def is_game_over(self) -> bool:
         for player in self.players:
             if player.board_space.color is Color.END:
                 return True
 
         return False
-
-    def undo_change_players(self) -> None:
-        current_player: Player = self.current_player()
-        prev_player: Player = self.prev_player()
-        current_player.toggle_is_current_player()
-        prev_player.toggle_is_current_player()
-
-    def prev_player(self) -> Player:
-        prev_player_number: int = (self.current_player().player_number + 2) % 4 + 1
-        for player in self.players:
-            if player.player_number == prev_player_number:
-                return player
-
-        raise ValueError("Prev player not found")
 
     def apply_drawn_card(self, card: Card) -> None:
         # do not apply the card at all if the current player is stuck

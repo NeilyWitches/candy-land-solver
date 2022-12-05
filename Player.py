@@ -1,5 +1,6 @@
 from board_space import *
 from card import Card
+from board import Board
 
 class StuckState(Enum):
     NOT_ON_STICKY_SPACE = 1
@@ -15,15 +16,22 @@ class Player:
         self.shortcut_taken: Union[Shortcut, None] = None
         self.stuck_state: StuckState = StuckState.NOT_ON_STICKY_SPACE
 
-    def copy(self) -> 'Player':
+    def copy(self, copy_board: Board) -> 'Player':
         copy: Player =  Player(
             self.player_number,
-            self.board_space.copy(),
+            self.find_board_space(copy_board),
             self.is_current_player
         )
         copy.shortcut_taken = self.shortcut_taken
         copy.stuck_state = self.stuck_state
         return copy
+
+    def find_board_space(self, copy_board: Board) -> BoardSpace:
+        for board_space in copy_board.board_spaces:
+            if board_space.color == self.board_space.color and board_space.position == self.board_space.position and board_space.sticky == self.board_space.sticky and board_space.shortcut == self.board_space.shortcut and board_space.treat == self.board_space.treat:
+                return board_space
+        
+        raise ValueError("Copy board space not found")
 
     def is_stuck(self, card: Card) -> bool:
         if not self.is_current_player:

@@ -38,14 +38,19 @@ class Deck:
 
     def draw_card(self, card: Card) -> None:
         self.cards.remove(card)
+        
+        if len(self.cards) == 0:
+            self.cards = self.generate_deck()
 
     def find_card(self, user_input: str) -> Card:
         inputted_card: Card
 
         if user_input not in {"r", "rr", "p", "pp", "y", "yy", "b", "bb", 
-        "o", "oo", "g", "gg", "plum", "candy can", "gumdrop", "lollipop", 
+        "o", "oo", "g", "gg", "plum", "candy_cane", "gumdrop", "lollipop", 
         "nut", "frost"}:
             raise ValueError("Invalid input")
+
+        
 
         color: Color = Color.PINK
         is_single_block: bool = True

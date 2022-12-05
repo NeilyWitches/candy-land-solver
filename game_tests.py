@@ -84,7 +84,8 @@ def test_create_copy() -> None:
 def test_copy_players() -> None:
     game: Game = Game()
     original_players: Players = game.players
-    copy_players: Players = game.copy_players()
+    copy_board: Board = Board()
+    copy_players: Players = game.copy_players(copy_board)
 
     # a single player should be different
     assert original_players.Player_1 != copy_players.Player_1, "Player 1 copy should differ from player 1 original, but doesn't" 
@@ -103,6 +104,11 @@ def test_copy_players() -> None:
     assert original_players.Player_1.board_space.sticky == copy_players.Player_1.board_space.sticky, "The sticky attribute of the copy board space of a single player should be the same as the original, but it is not"
     assert original_players.Player_1.board_space.shortcut == copy_players.Player_1.board_space.shortcut, "The shortcut attribute of the copy board space of a single player should be the same as the original, but it is not"
     assert original_players.Player_1.board_space.treat == copy_players.Player_1.board_space.treat, "The treat attribute of the copy board space of a player should be the same as the original board space, but it is not"
+
+    assert original_players.Player_1.board_space in game.board.board_spaces, "The original player's board space should be in the origial board, but it is not"
+    assert original_players.Player_1.board_space not in copy_board.board_spaces, "The original player's board space should not be in the copy board, but it is"
+    assert copy_players.Player_1.board_space not in game.board.board_spaces, "The copy player's board space should not be in the original board, but it is"
+    assert copy_players.Player_1.board_space in copy_board.board_spaces, "The copy player's board space should be in the copy board, but it is not"
 
 def has_correct_players(players: Players, correct_players: Players) -> bool:
     for i in range(4):
@@ -235,24 +241,6 @@ def test_next_player() -> None:
     assert game.next_player() != game.players.Player_2, "player 2 should not be the next player"
     assert game.next_player() != game.players.Player_3, "player 3 should not be the next player"
     assert game.next_player() != game.players.Player_4, "player 4 should not be the next player"
-
-def test_prev_player() -> None:
-    # finds the previous player
-    game: Game
-
-    game = Game()
-    assert game.prev_player() != game.players.Player_1, "player 1 should not be the prev player"
-    assert game.prev_player() != game.players.Player_2, "player 2 should not be the prev player"
-    assert game.prev_player() != game.players.Player_3, "player 3 should not be the prev player"
-    assert game.prev_player() == game.players.Player_4, "player 4 should be the prev player"
-
-    game.players.Player_1.toggle_is_current_player()
-    game.players.Player_4.toggle_is_current_player()
-
-    assert game.prev_player() != game.players.Player_1, "player 1 should not be the prev player"
-    assert game.prev_player() != game.players.Player_2, "player 2 should not be the prev player"
-    assert game.prev_player() == game.players.Player_3, "player 3 should be the prev player"
-    assert game.prev_player() != game.players.Player_4, "player 4 should not be the prev player"
 
 def test_move_curr_player_to_next_color() -> None:
     # it should move the current_player and not some other player
@@ -402,28 +390,6 @@ def test_apply_drawn_card() -> None:
     game.apply_drawn_card(Card(Color.ORANGE))
 
     assert game.players.Player_3.board_space == game.board.board_spaces.PurpleSpace_9, "Player 3 should have gone through the shortcut, but they did not"
-
-def test_undo_turn() -> None:
-    game: Game = Game()
-    board_space_before: BoardSpace = game.current_player().board_space
-
-    turn_card: Card
-    for card in game.deck.cards:
-        turn_card = card
-        break
-    
-    assert game.current_player() == game.players.Player_1, "the current player should be player 1 before any turn is taken, but the aren't"
-    assert turn_card not in game.discard_pile.cards, "the turn card should not be in the discard pile before a turn is taken, but it is"
-
-    game.simulate_turn(turn_card)
-    assert game.current_player() != game.players.Player_1, "taking a turn should have changed players, but it did not"
-    assert game.players.Player_1.board_space != board_space_before, "taking a turn should have moved player 1, but it did not"
-    assert turn_card in game.discard_pile.cards, "the turn card should be in the dicard pile, but it is not"
-
-    game.undo_turn(board_space_before, turn_card)
-    assert game.current_player() == game.players.Player_1, "undoing the turn should have made player 1 the current player again, but it did not"
-    assert game.players.Player_1.board_space == board_space_before, "undoing the turn should have move player 1 back to their original space, but it did not"
-    assert turn_card not in game.discard_pile.cards, "undoing the turn should have taken the turn_card out of the discard pile, but it did not"
 
 def test_copy() -> None:
     original: Game = Game()
